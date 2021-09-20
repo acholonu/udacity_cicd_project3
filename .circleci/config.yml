@@ -56,8 +56,8 @@ jobs:
       #       npm run lint
       - run:
           name: Build front-end
-          working_directory: ~/frontend
           command: |
+            cd frontend
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
@@ -83,9 +83,9 @@ jobs:
       #       npm run lint
       - run:
           name: Back-end build
-          working_directory: ~/backend
           command: |
-             npm run build
+            cd backend
+            npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
