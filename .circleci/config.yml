@@ -68,6 +68,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ./
       - restore_cache:
           keys: [backend-build]
       # - run:
@@ -80,8 +82,15 @@ jobs:
           command: |
             cd backend
             npm i
-            # npm install --registry=https://registry.npmjs.org/ 
-            # npm install --registry=https://custom.npm.registry.com/
+            #npm install latest-version
+            #npm update
+      # - run:
+      #     name: Deal with errors
+      #     command: |
+      #       npm install --registry=https://registry.npmjs.org/ 
+      #       npm install --registry=https://custom.npm.registry.com/ 
+      #       and then:
+      #       npm run start
       - run:
           name: Back-end build
           command: |
