@@ -82,15 +82,6 @@ jobs:
           command: |
             cd backend
             npm i
-            #npm install latest-version
-            #npm update
-      # - run:
-      #     name: Deal with errors
-      #     command: |
-      #       npm install --registry=https://registry.npmjs.org/ 
-      #       npm install --registry=https://custom.npm.registry.com/ 
-      #       and then:
-      #       npm run start
       - run:
           name: Back-end build
           command: |
@@ -319,12 +310,12 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
+      - build-frontend
       - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
