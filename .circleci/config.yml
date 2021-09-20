@@ -70,12 +70,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: install update dependencies
-          command: |
-            cd backend
-            npm i
-            npm audit fix --force
+      # - run:
+      #     name: install update dependencies
+      #     command: |
+      #       cd backend
+      #       npm i
+      #       npm audit fix --force
       # - run:
       #     name: lint code
       #     command: |
