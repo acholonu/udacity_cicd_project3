@@ -79,10 +79,9 @@ jobs:
           name: Install dependencies
           command: |
             cd backend
-            npm install --registry=https://registry.npmjs.org/ 
-            npm install --registry=https://custom.npm.registry.com/ 
-            and then:
-            npm run start
+            npm i
+            # npm install --registry=https://registry.npmjs.org/ 
+            # npm install --registry=https://custom.npm.registry.com/ 
             npm audit fix --audit-level=critical --force
       - run:
           name: Back-end build
