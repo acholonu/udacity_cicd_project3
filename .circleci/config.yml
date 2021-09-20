@@ -41,10 +41,16 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Build front-end
+          name: install update dependencies
           command: |
             npm i
             npm audit fix
+      - run:
+          name: lint code
+          command: npm run lint
+      - run:
+          name: Build front-end
+          command: |
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
@@ -58,10 +64,16 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
+          name: install update dependencies
+          command: |
+            npm i
+            npm audit fix
+      - run:
+          name: lint code
+          command: npm run lint
+      - run:
           name: Back-end build
           command: |
-             npm i
-             npm audit fix
              npm run build
       - save_cache:
           paths: [backend/node_modules]
