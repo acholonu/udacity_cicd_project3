@@ -46,6 +46,7 @@ jobs:
       - run:
           name: install update dependencies
           command: |
+            cd frontend
             npm i
             npm audit fix --audit-level=critical --force
       - run:
@@ -69,6 +70,7 @@ jobs:
       - run:
           name: install update dependencies
           command: |
+            cd backend
             npm i
             npm audit fix --audit-level=critical --force
       - run:
