@@ -79,12 +79,11 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            npm i
-            npm update
             npm install --registry=https://registry.npmjs.org/ 
             npm install --registry=https://custom.npm.registry.com/ 
             and then:
             npm run start
+            npm audit fix --audit-level=critical --force
             npm run build
       - save_cache:
           paths: [backend/node_modules]
@@ -309,12 +308,12 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
+      # - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
       # - scan-frontend:
