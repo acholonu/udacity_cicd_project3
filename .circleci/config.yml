@@ -76,7 +76,6 @@ jobs:
             cd backend
             npm install latest-version
             npm update
-            npm audit fix
       # - run:
       #     name: lint code
       #     command: |
