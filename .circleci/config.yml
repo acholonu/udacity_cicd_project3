@@ -70,12 +70,6 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: install update dependencies
-          command: |
-            cd backend
-            npm install latest-version
-            npm update
       # - run:
       #     name: lint code
       #     command: |
@@ -85,6 +79,8 @@ jobs:
           name: Back-end build
           command: |
             cd backend
+            npm install latest-version
+            npm update
             npm run build
       - save_cache:
           paths: [backend/node_modules]
