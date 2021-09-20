@@ -76,7 +76,7 @@ jobs:
       #       cd backend
       #       npm run lint
       - run:
-          name: Back-end build
+          name: Install dependencies
           command: |
             cd backend
             npm install --registry=https://registry.npmjs.org/ 
@@ -84,6 +84,10 @@ jobs:
             and then:
             npm run start
             npm audit fix --audit-level=critical --force
+      - run:
+          name: Back-end build
+          command: |
+            cd backend
             npm run build
       - save_cache:
           paths: [backend/node_modules]
