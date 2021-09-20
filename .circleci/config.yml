@@ -51,7 +51,9 @@ jobs:
             npm audit fix --audit-level=critical --force
       - run:
           name: lint code
-          command: npm run lint
+          command: |
+            cd frontend
+            npm run lint
       - run:
           name: Build front-end
           command: |
@@ -75,7 +77,9 @@ jobs:
             npm audit fix --audit-level=critical --force
       - run:
           name: lint code
-          command: npm run lint
+          command: |
+            cd backend
+            npm run lint
       - run:
           name: Back-end build
           command: |
