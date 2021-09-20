@@ -43,12 +43,12 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run:
-          name: install update dependencies
-          command: |
-            cd frontend
-            npm i
-            npm audit fix --audit-level=critical --force
+      # - run:
+      #     name: install update dependencies
+      #     command: |
+      #       cd frontend
+      #       npm i
+      #       npm audit fix --audit-level=critical --force
       # - run:
       #     name: lint code
       #     command: |
