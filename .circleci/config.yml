@@ -138,6 +138,10 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       # Your job code here
+      - run:
+          command: |
+            cd frontend
+            npm install oauth-sign
       - run: 
           name: Fix critical dependencies
           command: |
