@@ -180,3 +180,12 @@ Before you submit your project, please check your work against the project rubri
 ### License
 
 [License](LICENSE.md)
+
+## Other
+
+Ran the cloudformation code with the following aws cli command:
+
+```bash
+aws cloudformation create-stack --profile udacity_project3 --stack-name uda-cloudfront-stack --template-body file://cloudfront.yml --region us-east-1 --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+```
+
