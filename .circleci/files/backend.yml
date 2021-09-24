@@ -40,6 +40,6 @@ Resources:
 Outputs:
   BackendURL:
     Description: The backend DNS (host name)
-    Value: !Join ["", ["http://", !GetAtt EC2Instance.PublicDNSName]]
+    Value: !Join ["", ["http://", !GetAtt EC2Instance.PublicDnsName]]
     Export:
       Name: !Sub BackendURL-${ID}
