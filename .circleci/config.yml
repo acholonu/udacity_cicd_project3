@@ -179,6 +179,7 @@ jobs:
           command: |
             yum install -y tar
             yum install -y gzip
+
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -228,12 +229,13 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
+            # pip install -U ansible
             apk add --update ansible #install the dependencies
       - run:
           name: Configure server
           command: |
             # Your code here
-            ansible-playbook -i inventory.txt .circleci/ansible/configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
       #Here's where you will add some code to rollback on failure      
 
   # run-migrations:
@@ -262,6 +264,11 @@ jobs:
   #   steps:
   #     # Checkout code from git
   #     - checkout
+  #     - run:
+  #         name: Install tar utility
+  #         command: |
+  #           yum install -y tar
+  #           yum install -y gzip
   #     - run:
   #         name: Install dependencies
   #         command: |
@@ -329,6 +336,11 @@ jobs:
   #     # Checkout code from git
   #     - checkout
   #     - run:
+  #          name: Install tar utility
+  #          command: |
+  #            yum install -y tar
+  #            yum install -y gzip
+  #     - run:
   #         name: Install dependencies
   #         command: |
   #           # your code here
@@ -345,6 +357,11 @@ jobs:
 #     steps:
 #       # Checkout code from git
 #       - checkout
+#       - run:
+#           name: Install tar utility
+#           command: |
+#             yum install -y tar
+#             yum install -y gzip
 #       - run:
 #           name: Get old stack workflow id
 #           command: |

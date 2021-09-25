@@ -1,0 +1,26 @@
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: "yes"
+ 
+- name: "install dependencies."
+  become: true
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+ 
+- name: "install pm2"
+  become: true
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+# pm2 will automatically restart your application if it crashes
+# pm2 will keep a log of your unhandled exceptions /home/<user>/.pm2/logs/app-err.log.
+- name: "Start backend server using pm2"
+  shell: |
+    cd /home/ubuntu/backend
+    pm2 start npm --name backend -- start 
