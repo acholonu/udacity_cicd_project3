@@ -211,7 +211,6 @@ jobs:
              --output text) 
             echo $backend_ip >> inventory.txt # Appends results to inventory.txt
             echo "Backend IP: $backend_ip" #why am I getting multiple ips
-            export $backend_ip
 
       - run:
           name: Persist backend ip to storage
@@ -220,7 +219,7 @@ jobs:
             curl -H "Content-Type: text/plain" \
             -H "token: 35967abf-f7f3-4115-9352-dc45976d68eb" \
             --request PUT \
-            --data $backend_ip \
+            --data "$backend_ip" \
             https://api.memstash.io/values/backend_ip
 
       - run:
