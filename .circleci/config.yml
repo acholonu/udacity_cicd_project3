@@ -19,7 +19,10 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      # Add parameter here     
+      # Add parameter here
+      workflow_id:
+        type: string
+        default: $CIRCLE_WORKFLOW_ID     
     steps:
       - run:
           name: Revert migrations
@@ -200,11 +203,28 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             echo "[all]" > inventory.txt #Creates new file
-            aws ec2 describe-instances \
+            backend_ip = aws ec2 describe-instances \
              --filters "Name=tag:project,Values=udacity-project3" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-             --output text >> inventory.txt # Appends results to inventory.txt
-            
+             --output text 
+            echo backend_ip >> inventory.txt # Appends results to inventory.txt
+
+      - run:
+          name: Persist backend ip to storage
+          # Got token from memstash.io page.  Storage is temporary (that's why it is free)
+          command: |
+            curl -H "Content-Type: text/plain" \
+            -H "token: 35967abf-f7f3-4115-9352-dc45976d68eb" \
+            --request PUT \
+            --data backend_ip \
+            https://api.memstash.io/values/backend_ip
+
+      - run:
+          name: Test memstash stored ip
+          command: |
+            result = curl -H "token: 35967abf-f7f3-4115-9352-dc45976d68eb" \
+            --request GET https://api.memstash.io/values/backend_ip
+            echo result
       - persist_to_workspace:
           root: ~/
           paths:
