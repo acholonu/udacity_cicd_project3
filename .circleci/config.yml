@@ -210,7 +210,8 @@ jobs:
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text) 
             echo $backend_ip >> inventory.txt # Appends results to inventory.txt
-            echo "Backend IP: $backend_ip"
+            echo "Backend IP: $backend_ip" #why am I getting multiple ips
+            export $backend_ip
 
       - run:
           name: Persist backend ip to storage
