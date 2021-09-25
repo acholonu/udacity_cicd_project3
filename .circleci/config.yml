@@ -210,31 +210,31 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure      
 
-  # configure-infrastructure:
-  #   docker:
-  #     # Docker image here that supports Ansible
-  #     - image: circleci/python
-  #     #- image:python:3.7-alpine3.11
-  #   steps:
-  #     # Checkout code from git
-  #     - checkout
-  #     # Add ssh keys with fingerprint
-  #     - add_ssh_keys:
-  #         fingerprints: []
-  #     # attach workspace
-  #     - attach_workspace:
-  #         at: ./
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           apk add --update ansible #install the dependencies
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           ansible-playbook -i inventory.txt .circleci/ansible/configure-server.yml
-      # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+      # Docker image here that supports Ansible
+      - image: circleci/python
+      #- image:python:3.7-alpine3.11
+    steps:
+      # Checkout code from git
+      - checkout
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: [6d:32:ce:0e:b7:68:b3:e0:87:ba:dc:05:0e:74:31:a7]
+      # attach workspace
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            apk add --update ansible #install the dependencies
+      - run:
+          name: Configure server
+          command: |
+            # Your code here
+            ansible-playbook -i inventory.txt .circleci/ansible/configure-server.yml
+      #Here's where you will add some code to rollback on failure      
 
   # run-migrations:
   #   docker:
@@ -378,10 +378,10 @@ workflows:
           # filters:
           #   branches:
           #     only: [test-feature-branch]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      #- run-migrations:
+      #    requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
