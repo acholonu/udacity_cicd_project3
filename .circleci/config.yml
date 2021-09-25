@@ -188,7 +188,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udacity-project3 \
+              --tags project=udacity-project3-backend \
               --stack-name "uda-backend-stack-${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
       - run:
@@ -196,7 +196,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
+              --tags project=udacity-project3-frontend \
               --stack-name "uda-frontend-stack-${CIRCLE_WORKFLOW_ID}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
 
@@ -206,21 +206,26 @@ jobs:
           command: |
             echo "[all]" > inventory.txt #Creates new file
             backend_ip=$(aws ec2 describe-instances \
-             --filters "Name=tag:project,Values=udacity-project3" \
+             --filters "Name=tag:project,Values=udacity-project3-backend" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
              --output text) 
             echo $backend_ip >> inventory.txt # Appends results to inventory.txt
             echo "Backend IP: $backend_ip" #why am I getting multiple ips
-
-      - run:
-          name: Persist backend ip to storage
-          # Got token from memstash.io page.  Storage is temporary (that's why it is free)
-          command: |
             curl -H "Content-Type: text/plain" \
             -H "token: 35967abf-f7f3-4115-9352-dc45976d68eb" \
             --request PUT \
             --data "$backend_ip" \
             https://api.memstash.io/values/backend_ip
+
+      # - run:
+      #     name: Persist backend ip to storage
+      #     # Got token from memstash.io page.  Storage is temporary (that's why it is free)
+      #     command: |
+      #       curl -H "Content-Type: text/plain" \
+      #       -H "token: 35967abf-f7f3-4115-9352-dc45976d68eb" \
+      #       --request PUT \
+      #       --data "$backend_ip" \
+      #       https://api.memstash.io/values/backend_ip
 
       - run:
           name: Test memstash stored ip
