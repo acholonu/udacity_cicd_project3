@@ -262,9 +262,9 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-      - run:
-          name: Simulate Error
-          command: return 1
+      # - run:
+      #     name: Simulate Error
+      #     command: return 1
       - run:
           name: Configure server
           command: |
