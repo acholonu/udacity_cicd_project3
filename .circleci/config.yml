@@ -258,12 +258,13 @@ jobs:
           command: |
             # Your code here
             pip install -U ansible
-            apk add tar
-            apk add gzip
+            yum install -y tar gzip
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-            # apk add --update ansible #install the dependencies
+      - run:
+          name: Simulate Error
+          command: return 1
       - run:
           name: Configure server
           command: |
