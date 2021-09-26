@@ -283,6 +283,7 @@ jobs:
       - checkout
       - run:
           name: Run migrations
+          no_output_timeout: 15m
           command: |
             # Your code here
             cd backend
@@ -297,6 +298,8 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
             npm install
+            npm audit fix
+            npm audit fix --audit-level=critical --force
             touch migrations_log.txt
             npm run migrations >> migrations_log.txt
             cat migrations_log.txt
