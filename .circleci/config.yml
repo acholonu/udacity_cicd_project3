@@ -7,22 +7,21 @@ commands:
       # Add parameter here
       workflow_id:
         type: string
-        default: $CIRCLE_WORKFLOW_ID
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
             # Your code here
-            exit 1
+            aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
+            aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
       # Add parameter here
       workflow_id:
-        type: string
-        default: $CIRCLE_WORKFLOW_ID     
+        type: string     
     steps:
       - run:
           name: Revert migrations
@@ -228,11 +227,14 @@ jobs:
           command: |
             result=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             echo "$result"
+
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
   configure-infrastructure:
     docker:
@@ -259,7 +261,9 @@ jobs:
           command: |
             # Your code here
             ansible-playbook -i inventory.txt configure-server.yml
-      #Here's where you will add some code to rollback on failure      
+      #Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
   # run-migrations:
   #   docker:
