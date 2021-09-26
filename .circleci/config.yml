@@ -252,18 +252,23 @@ jobs:
           fingerprints: [6d:32:ce:0e:b7:68:b3:e0:87:ba:dc:05:0e:74:31:a7]
       # attach workspace
       - attach_workspace:
-          at: project/.circleci/ansible/
+          at: ~/
       - run:
           name: Install dependencies
           command: |
             # Your code here
             pip install -U ansible
+            apk add tar
+            apk add gzip
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
             # apk add --update ansible #install the dependencies
       - run:
           name: Configure server
           command: |
             # Your code here
-            #cd .circleci/ansible
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       #Here's where you will add some code to rollback on failure
       - destroy-environment:
