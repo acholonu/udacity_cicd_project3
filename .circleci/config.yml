@@ -325,6 +325,7 @@ jobs:
   #     - checkout
   #     - run:
   #         name: Install dependencies
+  #         no_output_timeout: 15m
   #         command: |
   #           # your code here
   #           yum install -y tar
@@ -393,10 +394,11 @@ jobs:
   #     - checkout
   #     - run:
   #         name: Install dependencies
+  #         no_output_timeout: 15m
   #         command: |
   #           # your code here
-  #            yum install -y tar
-  #            yum install -y gzip
+  #           yum install -y tar
+  #           yum install -y gzip
   #     - run:
   #         name: Update cloudfront distribution
   #         command: |
@@ -412,6 +414,7 @@ jobs:
 #       - checkout
 #       - run:
 #           name: Install tar utility
+#           no_output_timeout: 15m
 #           command: |
 #             yum install -y tar
 #             yum install -y gzip
