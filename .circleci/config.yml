@@ -208,7 +208,7 @@ jobs:
             aws ec2 describe-instances \
              --filters "Name=tag:project,Values=udacity-project3-backend" \
              --query 'Reservations[*].Instances[*].PublicDnsName' \
-             --output text >> inventory.txt # Appends results to inventory.txt
+             --output text >> .circleci/ansible/inventory.txt # Appends results to inventory.txt
              cat inventory.txt
 
       - run:
@@ -233,7 +233,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
