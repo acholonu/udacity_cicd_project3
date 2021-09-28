@@ -9,6 +9,30 @@ In this project, you will prove your mastery of the following learning objective
 
 ![Diagram of CI/CD Pipeline we will be building.](udapeople.png)
 
+## Conceptual Overview of the Project
+
+To help my understanding, I will present my conceptual understanding of the project.  What we are trying to do and how.
+
+### Relevant Files
+
+The majority of the CI/CD code that had to written for the project can be found in the `.circleci` folder. More specificially, all the relevant code can be found in the following files under the `.circleci` folder:
+
+- **config.yml**: the main file that outline the CI/CD pipeline
+- *files/cloudfront.yml* (given): File that deploys the initial infrastructure for production deployment on the CloudFront CDN service.  Cloudfront delivers content to user.  It is a content delivery service.
+
+- *files/backend.yml*: Creates the EC2 instance that will serve the backend binary that runs the nodejs website.
+
+- *files/frontend.yml*: Deploys the frontend infrastructure. The frontend will be served through an S3 bucket. So creates the bucket for where the frontend will be store. The s3bucket will be unique with the CIRCLE_WORKFLOW_ID.  So every new frontend will be stored in a different S3 bucket, so the url will change (based on the s3 bucket url). When promoting the new frontend, you are swapping this new url (green deployment) with the blue candidate that is currently in Cloudfront infrastructure.
+
+- *ansible/configure-server.yml*: One of the main files for ansible. Installs python on the EC2 instance.  See the `configure-infrastructure` job in the *config.yml*. It also triggers the *configure-server role* and the *configure-prometheus-node-exporter role*.
+  - *ansible/roles/configure-server/main.yml*: Installs `nodejs`, `npm`, and `pm2` on the EC2 instance.  Then starts the backend server using pm2.
+  - *ansible/roles/configure-prometheus-node-exporter/tasks/main.yml*:  Installs node exporter and enables the prometheus node_exporter service.  Prometheus is a open source service that monitors applications and sends alerts when needed.
+
+- *ansible/deploy-backend.yml*: Sets up the deploy role (also initiates ansible settings).
+  - *ansible/roles/deploy/tasks/main.yml*:
+
+### How the CICD pipeline is laid by the config.yml file
+
 ## Instructions
 
 - [Selling CI/CD](instructions/0-selling-cicd.md)
@@ -188,4 +212,3 @@ Ran the cloudformation code with the following aws cli command:
 ```bash
 aws cloudformation create-stack --profile udacity_project3 --stack-name uda-cloudfront-stack --template-body file://cloudfront.yml --region us-east-1 --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 ```
-
