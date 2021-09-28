@@ -35,7 +35,15 @@ Note the actually code for the application that is being deployed is in the back
 
 ### How the CICD pipeline is laid out by the config.yml file
 
-`Add pipeline image`
+[CICD Pipeline](./img/CICD_pipeline.png)
+
+To understand what this project is doing.  I am listing out jobs/steps in the pipeline (i.e., workflow), and trying to explain them. Note, each job is done within a container.  We specify the container to use.
+
+1. **Build Frontend**: Take the front end code and create the binary (computer readable version of the code) that will be executed. This requires installing dependencies, checking the code style fits expectation, and then finally creating the binary. To prevent constantly having to install the dependencies, after the first run of the workflow, all subsequent workflows will use the dependencies store in the cache.
+
+2. **Build Backend**: Similar to build front end, but you are building the backend binary.
+
+3. **Test-Frontend**:
 
 ### Saving Information in CircleCI
 
