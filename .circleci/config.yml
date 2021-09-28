@@ -245,6 +245,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          # you need awscli for the destroy-environment command
           name: Install dependencies
           command: |
             # Your code here
@@ -258,6 +259,7 @@ jobs:
       #     command: return 1
       - run:
           name: Setup .env file
+          # QUESTION: why is this done here versus inside Ansible script?
           command: |
             cd backend
             echo ENVIROMENT=$ENVIROMENT > ".env"

@@ -7,7 +7,7 @@ In this project, you will prove your mastery of the following learning objective
 - Utilize a configuration management tool to accomplish deployment to cloud-based servers.
 - Surface critical server errors for diagnosis using centralized structured logging.
 
-![Diagram of CI/CD Pipeline we will be building.](udapeople.png)
+![Diagram of CI/CD Pipeline we will be building.](./img/udapeople.png)
 
 ## Conceptual Overview of the Project
 
@@ -29,9 +29,45 @@ The majority of the CI/CD code that had to written for the project can be found 
   - *ansible/roles/configure-prometheus-node-exporter/tasks/main.yml*:  Installs node exporter and enables the prometheus node_exporter service.  Prometheus is a open source service that monitors applications and sends alerts when needed.
 
 - *ansible/deploy-backend.yml*: Sets up the deploy role (also initiates ansible settings).
-  - *ansible/roles/deploy/tasks/main.yml*:
+  - *ansible/roles/deploy/tasks/main.yml*: `Add description`
 
-### How the CICD pipeline is laid by the config.yml file
+Note the actually code for the application that is being deployed is in the backend and frontend containers. The backend constructs the backend server using Nodejs.  The frontend (i.e., client GUI) is also created using Nodejs  
+
+### How the CICD pipeline is laid out by the config.yml file
+
+`Add pipeline image`
+
+### Saving Information in CircleCI
+
+![Persisting Data in CircleCI](./img/CircleCI_persist_data.png)
+
+[Persisting Data in CircleCI](https://circleci.com/blog/persisting-data-in-workflows-when-to-use-caching-artifacts-and-workspaces/)
+
+As the image shows:
+
+- *Workspace*: are mutable (i.e., changeable) file storage for while the workflow is running.  Each job in the workflow can add (`persist_to_workspace`) *files* and retreive *files* (`attach_workspace`). When retrieving files, you can only access it files from jobs that occurred previously.
+
+- *Cache*: are nonmutatble file storage that can be use between workflow runs.  It shares files saved in the same job (`save_cache`) but across different workflow runs. It is main used for storing packages or things you download for the purpose of running the application.  It makes it so the next time you run . To retrieve files (`restore_cache`).
+
+- *artifacts*: If you want to store files, which were constructed inside of a workflow, outside of the workflow. You will be able to access the files through the CircleCI tool
+
+- *environment variables*: You (the user), store key-pair values in the CIRCLECI interface to be used by the workflow.  You may store secrets or things you do not want to hard code into your code.  Secrets include ssh keys, database connection information, or login information.
+
+- *secrets manager*: Secrets managers like Hashicorp vault, AWS secret manager, or memstash.io can be use to store environment variables or other variables. Note I said variable.  The CircleCI persist data all focus on saving files.  These secret manager securely store variables that you can save and retrieve while run a workflow or even running the application. This project uses memstash.io as its secrets manager example.
+  
+  - ![Memstash IO interface](./img/memstash_io.png)
+  - [Memstash.io url](memstash.io)
+  - To use memstash.io you need to go to the url.  And copy the PUT curl code to save the data.  You can put in dummy data for the Key and Values.  The most important part is the unique token.  That is how it going to store and retieve the data.  After getting the PUT code, include it in your application or workflow.  To retrieve the value use the Get Curl code that memstash.io provides.
+
+### Other Notes
+
+Ran the cloudformation code with the following aws cli command:
+
+```bash
+aws cloudformation create-stack --profile udacity_project3 --stack-name uda-cloudfront-stack --template-body file://cloudfront.yml --region us-east-1 --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
+```
+
+---
 
 ## Instructions
 
@@ -131,7 +167,7 @@ As the warning says above, it won't be possible to run most of the code in the p
 
 Most of the tasks needed to build, test and deploy the application are simplified by "npm scripts" that are found in the `package.json` for either front-end or back-end. For any of these scripts, you will need to `cd` into the respective folder and then run the script using the command `npm run [script name]`. Here are the most relevant scripts:
 
-![Project Table](project3_table.png)
+![Project Table](./img/project3_table.png)
 
 ### Examples
 
@@ -204,11 +240,3 @@ Before you submit your project, please check your work against the project rubri
 ### License
 
 [License](LICENSE.md)
-
-## Other
-
-Ran the cloudformation code with the following aws cli command:
-
-```bash
-aws cloudformation create-stack --profile udacity_project3 --stack-name uda-cloudfront-stack --template-body file://cloudfront.yml --region us-east-1 --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
-```
