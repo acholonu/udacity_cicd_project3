@@ -35,7 +35,7 @@ Note the actually code for the application that is being deployed is in the back
 
 ### How the CICD pipeline is laid out by the config.yml file
 
-[CICD Pipeline](./img/CICD_pipeline.png)
+![CICD Pipeline](./img/CICD_pipeline.png)
 
 To understand what this project is doing.  I am listing out jobs/steps in the pipeline (i.e., workflow), and trying to explain them. Note, each job is done within a container.  We specify the container to use.
 
