@@ -1,0 +1,21 @@
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html
+- name: Copy local backend files to EC2 instance
+  # local files are the files in the container that is running this job.
+  become: true
+  ansible.builtin.copy:
+    src:  dist
+    dest: .
+
+- name: Start backend
+  become: true
+  shell: |
+    pm2 start npm --name backend -- start
+    pm2 ls
+
+# pm2 will automatically restart your application if it crashes
+# pm2 will keep a log of your unhandled exceptions /home/<user>/.pm2/logs/app-err.log.
+# learn more: https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps
+# - name: "Start backend server using pm2"
+#   shell: |
+#     cd /home/ubuntu/backend
+#     pm2 start npm --name backend -- start 

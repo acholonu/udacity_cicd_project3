@@ -60,6 +60,7 @@ jobs:
           command: |
             cd frontend
             npm run build
+            ls -l
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -82,6 +83,7 @@ jobs:
           command: |
             cd backend
             npm run build
+            ls -l # just want to see the list of files
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -127,8 +129,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ./
+      # - attach_workspace:
+      #     at: ./
       # Restore from cache
       - restore_cache:
           keys: [backend-build]
@@ -232,7 +234,7 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: circleci/python
+      - image: cimg/python
     steps:
       # Checkout code from git
       - checkout
@@ -242,6 +244,8 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: python-packages-{{ .Branch }}
       - run:
           # you need awscli for the destroy-environment command
           name: Install dependencies
@@ -252,6 +256,7 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
+            python --version
       # - run:
       #     name: Simulate Error
       #     command: return 1
@@ -278,12 +283,17 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       #Here's where you will add some code to rollback on failure
+      - persist_to_workspace:
+           root: ~/
+           paths:
+             - backend/.env
+      - save_cache:
+          key: python-packages-{{ .Branch }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.9/site-packages"
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - project/backend/.env      
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
   run-migrations:
     docker:
@@ -292,6 +302,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - restore_cache:
+          keys: [backend-build]
       # attach workspace
       # - attach_workspace:
       #     at: ~/
@@ -301,9 +313,9 @@ jobs:
           command: |
             # Your code here
             cd backend
-            npm install
-            npm audit fix
-            npm audit fix --audit-level=critical --force
+            #npm install
+            #npm audit fix
+            #npm audit fix --audit-level=critical --force
             touch migrations_log.txt
             npm run migrations >> migrations_log.txt
             cat migrations_log.txt
@@ -330,30 +342,42 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - restore_cache:
+          keys: [frontend-build]
       - run:
           name: Install dependencies
           no_output_timeout: 15m
           command: |
             # your code here
             yum install -y tar gzip
+            rpm -ql # trying to locate where packages are installed
       - run:
           name: Get backend url
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
-            #export API_URL="http://${BACKEND_IP}:3030"
             export API_URL="http://${BACKEND_DNS}:3030"
             echo "${API_URL}"
       - run:
-          name: Deploy frontend objects
+          name: Build frontend objects
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
+            cd frontend
+            npm run build
+            ls
+      - run:
+          name: Move front end files to S3 candidate bucket
+          command: |
+            cd frontend
+            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID}
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
                     
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: circleci/python
+      - image: cimg/python
     steps:
       # Checkout code from git
       - checkout
@@ -363,22 +387,23 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
-            pip install -U ansible
-            sudo apt install tar gzip
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: python-package-{{ checksum "Pipfile.lock" }}
+      # - run:
+      #     name: Install dependencies
+      #     command: |
+      #       # your code here
+      #       pip install -U ansible
+      #       sudo apt install tar gzip
+      #       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      #       unzip awscliv2.zip
+      #       sudo ./aws/install
       - run:
           name: Deploy backend
           command: |
             # your code here
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-            
 
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
@@ -440,8 +465,7 @@ jobs:
 #           name: Install tar utility
 #           no_output_timeout: 15m
 #           command: |
-#             yum install -y tar
-#             yum install -y gzip
+#             yum install -y tar gzip
 #       - run:
 #           name: Get old stack workflow id
 #           command: |
@@ -474,7 +498,7 @@ workflows:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           # filters:
           #   branches:
-          #     only: [test-feature-branch]
+          #     only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:

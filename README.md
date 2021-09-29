@@ -39,11 +39,29 @@ Note the actually code for the application that is being deployed is in the back
 
 To understand what this project is doing.  I am listing out jobs/steps in the pipeline (i.e., workflow), and trying to explain them. Note, each job is done within a container.  We specify the container to use.
 
-1. **Build Frontend**: Take the front end code and create the binary (computer readable version of the code) that will be executed. This requires installing dependencies, checking the code style fits expectation, and then finally creating the binary. To prevent constantly having to install the dependencies, after the first run of the workflow, all subsequent workflows will use the dependencies store in the cache.
+1. **Build Frontend**: Use this container to take the front end code and create the binary (computer readable version of the code) that will be executed. This requires installing dependencies, checking the code style fits expectation, and then finally creating the binary. To prevent constantly having to install the dependencies, after the first run of the workflow, all subsequent workflows will use the dependencies store in the cache.
 
-2. **Build Backend**: Similar to build front end, but you are building the backend binary.
+2. **Build Backend**: Similar to build front end, but use this container to build (compile) the backend binary.  Want to make sure there is no syntax errors.
 
-3. **Test-Frontend**:
+3. **Test Frontend**: Use this container to tests that the frontend scripts passes unit tests.  Want to make sure there are no logical errors.
+
+4. **Test Backend**: Use this container to tests that the backend scripts passes unit tests. Want to make sure there are no logical errors.
+
+5. **Scan Frontend**: Use this container to scan package dependencies (i.e., packages/modules/libraries) for the frontend scripts for security issues. It also fixes the most critical cases by forcing a package update.
+
+6. **Scan Backend**: Use this container to scan package dependencies (i.e., packages/modules/libraries) for the backend scripts for security issues.It also fixes the most critical cases. It also fixes the most critical cases by forcing a package update.
+
+7. **deploy infrastructure**: You are telling this container to use the cloudformation template (i.e., `backend.yml`) and generate the EC2 instance for where the backend application will be located.  Also create the S3 bucket, using the cloudformation template `frontend.yml`, where the frontend will be located. Create the inventory file that ansible use to understand which EC2 instances in your account to configure.  The inventory file is stored in the workspace so other jobs can access file. I also store the backend URL to memstash, so I can access this variable at any point.
+
+8. **configure-infrastructure**: Goal is to run ansible in the container and tell let ansible ssh into the EC2 instances that you defined in the inventory.txt file.
+
+9. **run-migration**: The container runs the database migration after configuring the .env file.
+
+10. **deploy-frontend**: Container that moves frontend files to S3 bucket that will serve our green candidate website for deployment.
+
+11. **deploy-backend**: Container that moves the final backend files to the EC2 instance that will serve as our green candidate for deployment.
+
+12. **Smoke Test**:
 
 ### Saving Information in CircleCI
 
@@ -74,6 +92,8 @@ Ran the cloudformation code with the following aws cli command:
 ```bash
 aws cloudformation create-stack --profile udacity_project3 --stack-name uda-cloudfront-stack --template-body file://cloudfront.yml --region us-east-1 --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 ```
+
+In CircleCI an executor is related to what base operating system (MacOS, Linus, Window) the container is based on.
 
 ---
 
