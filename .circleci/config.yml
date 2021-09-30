@@ -49,7 +49,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Lint and install update dependencies
+          name: Install update dependencies
           command: |
             cd frontend
             npm i
@@ -234,7 +234,7 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/python
+      - image: circleci/python
     steps:
       # Checkout code from git
       - checkout
@@ -377,7 +377,7 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: cimg/python
+      - image: circleci/python
     steps:
       # Checkout code from git
       - checkout
