@@ -252,10 +252,12 @@ jobs:
           command: |
             # Your code here
             pip install -U ansible
-            sudo apt install tar gzip
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+            pip install awscli
+            
+            #sudo apt install tar gzip
+            #curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            #unzip awscliv2.zip
+            #sudo ./aws/install
             python --version
       # - run:
       #     name: Simulate Error
@@ -278,6 +280,7 @@ jobs:
             cat .env
       - run:
           name: Configure server
+          no_output_timeout: 25m #time out after 15 minutes
           command: |
             # Your code here
             cd .circleci/ansible
