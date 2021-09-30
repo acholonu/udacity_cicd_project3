@@ -280,7 +280,7 @@ jobs:
             cat .env
       - run:
           name: Configure server
-          no_output_timeout: 25m #time out after 15 minutes
+          no_output_timeout: 15m #time out after 15 minutes
           command: |
             # Your code here
             cd .circleci/ansible
