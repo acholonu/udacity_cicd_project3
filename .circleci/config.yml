@@ -152,8 +152,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - attach_workspace:
-          at: ./
+      # - attach_workspace:
+      #     at: ./
       # Restore from cache
       - restore_cache:
           keys: [backend-build]
@@ -252,12 +252,12 @@ jobs:
           command: |
             # Your code here
             pip install -U ansible
-            #pip install awscli
+            pip install awscli
             
-            sudo apt install tar gzip
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+            # sudo apt install tar gzip
+            # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            # unzip awscliv2.zip
+            # sudo ./aws/install
             python --version
       # - run:
       #     name: Simulate Error
@@ -289,14 +289,14 @@ jobs:
       - persist_to_workspace:
            root: ~/
            paths:
-             - backend/.env
+             - project/backend/.env
       - save_cache:
           key: python-packages-{{ .Branch }}
           paths:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.9/site-packages"
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
   run-migrations:
     docker:
