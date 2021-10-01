@@ -244,8 +244,8 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      # - restore_cache:  # ensure this step occurs *before* installing dependencies
-      #     key: python-packages-{{ .Branch }}
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: python-packages-{{ .Branch }}
       - run:
           # you need awscli for the destroy-environment command
           name: Install dependencies
@@ -286,17 +286,17 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       #Here's where you will add some code to rollback on failure
-      # - persist_to_workspace:
-      #      root: ~/
-      #      paths:
-      #        - backend/.env
-      # - save_cache:
-      #     key: python-packages-{{ .Branch }}
-      #     paths:
-      #       - "/usr/local/bin"
-      #       - "/usr/local/lib/python3.9/site-packages"
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+      - persist_to_workspace:
+           root: ~/
+           paths:
+             - backend/.env
+      - save_cache:
+          key: python-packages-{{ .Branch }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.9/site-packages"
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
   run-migrations:
     docker:
@@ -308,8 +308,8 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       # attach workspace
-      # - attach_workspace:
-      #     at: ~/
+      - attach_workspace:
+          at: ~/
       - run:
           name: Run migrations
           no_output_timeout: 15m

@@ -95,6 +95,12 @@ aws cloudformation create-stack --profile udacity_project3 --stack-name uda-clou
 
 In CircleCI an executor is related to what base operating system (MacOS, Linus, Window) the container is based on.
 
+#### To SSH into Client
+
+1. Open terminal
+2. Run this command, if necessary, to ensure your key is not publicly viewable. `chmod 400 <key-file.cer/pem>`
+3. In terminal enter the following: `ssh -i <key-file.cer or key-file.pem> <user>@<IP-address>` where user is the OS default user: (e.g, `ubuntu` for Linux Ubuntu OS, `ec2-user` for Amazon distributions. And IP-Address can be the ip-address or the dns url
+
 ---
 
 ## Instructions
