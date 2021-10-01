@@ -240,12 +240,12 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: [6d:32:ce:0e:b7:68:b3:e0:87:ba:dc:05:0e:74:31:a7]
+          fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
       # attach workspace
       - attach_workspace:
           at: ~/
-      # - restore_cache:  # ensure this step occurs *before* installing dependencies
-      #     key: python-packages-{{ .Branch }}
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: python-packages-{{ .Branch }}
       - run:
           # you need awscli for the destroy-environment command
           name: Install dependencies
@@ -290,11 +290,11 @@ jobs:
            root: ~/
            paths:
              - backend/.env
-      # - save_cache:
-      #     key: python-packages-{{ .Branch }}
-      #     paths:
-      #       - "/usr/local/bin"
-      #       - "/usr/local/lib/python3.9/site-packages"
+      - save_cache:
+          key: python-packages-{{ .Branch }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.9/site-packages"
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
@@ -388,7 +388,7 @@ jobs:
       - checkout
       # Add ssh keys with fingerprint
       - add_ssh_keys:
-          fingerprints: [6d:32:ce:0e:b7:68:b3:e0:87:ba:dc:05:0e:74:31:a7]
+          fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
       # attach workspace
       - attach_workspace:
           at: ~/
