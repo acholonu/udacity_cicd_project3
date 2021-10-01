@@ -244,8 +244,8 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      - restore_cache:  # ensure this step occurs *before* installing dependencies
-          key: python-packages-{{ .Branch }}
+      # - restore_cache:  # ensure this step occurs *before* installing dependencies
+      #     key: python-packages-{{ .Branch }}
       - run:
           # you need awscli for the destroy-environment command
           name: Install dependencies
@@ -290,11 +290,11 @@ jobs:
            root: ~/
            paths:
              - backend/.env
-      - save_cache:
-          key: python-packages-{{ .Branch }}
-          paths:
-            - "/usr/local/bin"
-            - "/usr/local/lib/python3.9/site-packages"
+      # - save_cache:
+      #     key: python-packages-{{ .Branch }}
+      #     paths:
+      #       - "/usr/local/bin"
+      #       - "/usr/local/lib/python3.9/site-packages"
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
