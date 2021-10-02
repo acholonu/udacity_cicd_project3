@@ -282,6 +282,7 @@ jobs:
            root: ~/
            paths:
              - project/backend/.env
+  
       # - save_cache:
       #     #key: python-packages-{{ .Branch }}
       #     key: python-packages-${CIRCLE_WORKFLOW_ID}
@@ -303,6 +304,22 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
+      - run:
+          name: Setup .env file
+          # QUESTION: why is this done here versus inside Ansible script?
+          command: |
+            cd backend
+            echo ENVIROMENT=$ENVIROMENT > ".env"
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ".env"
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> ".env"
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ".env"
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ".env"
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ".env"
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
+            cat .env
       - run:
           name: Run migrations
           no_output_timeout: 15m
@@ -329,7 +346,9 @@ jobs:
             fi
      # Here's where you will add some code to rollback on failure
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"         
 
   deploy-frontend:
     docker:
@@ -432,7 +451,11 @@ jobs:
   #         name: Frontend smoke test.
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
+  #     # Here's where you will add some code to rollback on failure
+  #     - destroy-environment:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"
+  #     - revert-migrations:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"  
 
   # cloudfront-update:
   #   docker:
@@ -453,6 +476,10 @@ jobs:
   #         command: |
   #           # your code here
   #     # Here's where you will add some code to rollback on failure  
+  #     - destroy-environment:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"
+  #     - revert-migrations:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
 # cleanup:
 #     docker:
