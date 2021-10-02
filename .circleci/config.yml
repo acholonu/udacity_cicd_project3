@@ -305,30 +305,11 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Setup .env file
-          # QUESTION: why is this done here versus inside Ansible script?
-          command: |
-            cd backend
-            echo ENVIROMENT=$ENVIROMENT > ".env"
-            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ".env"
-            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> ".env"
-            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ".env"
-            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ".env"
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
-            echo TYPEORM_PORT=$TYPEORM_PORT >> ".env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
-            cat .env
-      - run:
           name: Run migrations
           no_output_timeout: 15m
           command: |
             # Your code here
             cd backend
-            #npm install
-            #npm audit fix
-            #npm audit fix --audit-level=critical --force
             touch migrations_log.txt
             npm run migrations >> migrations_log.txt
             cat migrations_log.txt
@@ -345,10 +326,11 @@ jobs:
               --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
      # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"         
+         
 
   deploy-frontend:
     docker:
