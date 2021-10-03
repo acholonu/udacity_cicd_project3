@@ -358,7 +358,7 @@ jobs:
             cd frontend
             npm install
             npm audit fix
-            npm audit fix --audit-level=critical --force
+            #npm audit fix --audit-level=critical --force
 
       - run:
           name: Get backend url
