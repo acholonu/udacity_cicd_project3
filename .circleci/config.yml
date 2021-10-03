@@ -413,6 +413,12 @@ jobs:
             pip install awscli
 
       - run:
+          name: Package backend
+          # will use this to copy into EC2 instance
+          command: |
+            tar cvzf backend.tar.gz backend
+
+      - run:
           name: Deploy backend
           command: |
             # your code here
