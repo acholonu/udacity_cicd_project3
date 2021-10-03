@@ -347,12 +347,14 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
+          # Explains the -y for the yum install command: 
+          # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
           name: Install dependencies
           no_output_timeout: 15m
           command: |
             # your code here
-            yum install -y tar gzip
-            sudo yum install unzip # For AWS unzip
+            yum install -y tar gzip # The -y say yes to continuing the installation
+            yum install -y unzip # For AWS unzip
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
