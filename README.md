@@ -31,7 +31,7 @@ The majority of the CI/CD code that had to written for the project can be found 
 - *ansible/deploy-backend.yml*: Sets up the deploy role (also initiates ansible settings).
   - *ansible/roles/deploy/tasks/main.yml*: `Add description`
 
-Note the actually code for the application that is being deployed is in the backend and frontend containers. The backend constructs the backend server using Nodejs.  The frontend (i.e., client GUI) is also created using Nodejs  
+Note the actually code for the application that is being deployed is in the backend and frontend containers. The backend constructs the backend server using Nodejs.  The frontend (i.e., client GUI) is also created using Nodejs.  Also we are using a `blue-green deployment strategy`.  
 
 ### How the CICD pipeline is laid out by the config.yml file
 
@@ -63,7 +63,7 @@ To understand what this project is doing.  I am listing out jobs/steps in the pi
 
 12. **Smoke Test**: The goal is to check that the candidate application is on the internet and that you can connect to it.
 
-13. **CloudFront Update**: Replace the blue candidate (aka. the application version currently running as the production application) with green candidate (updated application that just went through the CICD process).
+13. **CloudFront Update**: Promote the candidate application replacement. Replace the blue candidate (aka. the application version currently running as the production application) with green candidate (updated application that just went through the CICD process).
 
 14. **Clean up**:
 
