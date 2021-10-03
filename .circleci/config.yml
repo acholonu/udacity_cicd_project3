@@ -351,7 +351,10 @@ jobs:
           no_output_timeout: 15m
           command: |
             # your code here
-            yum install -y npm
+            yum install gzip tar python3-pip curl -y
+            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            yum install nodejs npm -y
+            npm install
             npm audit fix
 
       - run:
