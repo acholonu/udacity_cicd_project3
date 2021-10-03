@@ -2,18 +2,23 @@
   become: yes
   apt:
     upgrade: "yes"
+   
+# - name: Creates directory 
+#   file:
+#     path: /home/ubuntu/backend
+#     state: directory
 
-- name: "Copy backend tar.gz file and unzipping it"
+- name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
     src: ~/project/backend.tar.gz
     dest: /home/ubuntu
 
-# - name: "deploy backend app to new location"
-#   become: true
-#   copy:
-#     src:  /root/project/backend/.env
-#     dest: /home/ubuntu/backend/
+- name: "deploy backend app to new location"
+  become: true
+  copy:
+    src:  /root/project/backend/.env
+    dest: /home/ubuntu/backend/
 
 - name: "install package dependencies"
   become: true
