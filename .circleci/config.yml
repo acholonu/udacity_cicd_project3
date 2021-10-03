@@ -375,11 +375,14 @@ jobs:
             ls
 
       - run:
+          # difference btw aws cp and aws sync: https://stackoverflow.com/questions/64728076/aws-s3-cp-vs-aws-s3-sync-behavior-and-cost
           name: Move front end files to S3 candidate bucket
           command: |
             cd frontend
-            aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID}
-
+            ls -lha
+            # Testing with the / for dist
+            aws s3 sync dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}" 
@@ -423,7 +426,7 @@ jobs:
     docker:
       # Lightweight Docker image
       #- image: alpine:latest
-      - image: python:3.7-alpine3.11 
+      - image: alpine:latest 
     steps:
       # Checkout code from git
       - checkout
@@ -431,20 +434,44 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
-            pip install awscli
+            apk add --update curl tar gzip python3 py3-pip
+            pip3 install --upgrade pip
+            pip3 install awscli
 
       - run:
           name: Get backend url
           command: |
             # your code here
+            BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
+            API_URL="http://${BACKEND_DNS}:3030"
+            export API_URL
+
       - run:
           name: Backend smoke test.
           command: |
             # your code here
+            if curl -s --head $API_URL 
+            then
+              echo "Connected to backend EC2 instance"
+              return 0
+            else
+              echo "Failed to connect to backend EC2 instance"
+              return 1
+            fi
+
       - run:
           name: Frontend smoke test.
           command: |
             # your code here
+            if curl -s --head s3://udapeople-${CIRCLE_WORKFLOW_ID} 
+            then
+              echo "Connected to frontend using the S3 url"
+              return 0
+            else
+              echo "Failed to connect to frontend URL"
+              return 1
+            fi
+
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
@@ -528,8 +555,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations, deploy-frontend]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:

@@ -105,6 +105,11 @@ In CircleCI an executor is related to what base operating system (MacOS, Linus, 
 2. Run this command, if necessary, to ensure your key is not publicly viewable. `chmod 400 <key-file.cer/pem>`
 3. In terminal enter the following: `ssh -i <key-file.cer or key-file.pem> <user>@<IP-address>` where user is the OS default user: (e.g, `ubuntu` for Linux Ubuntu OS, `ec2-user` for Amazon distributions. And IP-Address can be the ip-address or the dns url
 
+### Random help links
+
+- [AWS CLI S3 Command Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/sync.html)
+- [difference btw aws cp and aws sync:](https://stackoverflow.com/questions/64728076/aws-s3-cp-vs-aws-s3-sync-behavior-and-cost)
+
 ---
 
 ## Instructions
