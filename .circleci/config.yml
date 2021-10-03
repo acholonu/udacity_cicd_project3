@@ -13,6 +13,7 @@ commands:
           when: on_fail
           command: |
             # Your code here
+            aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID}/dist
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
             exit 1
@@ -344,6 +345,9 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      # attach workspace
+      - attach_workspace:
+          at: ~/
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
@@ -357,6 +361,7 @@ jobs:
             cd frontend
             npm install
             npm audit fix
+            npm audit fix --audit-level=critical --force
 
       - run:
           name: Get backend url
@@ -382,7 +387,7 @@ jobs:
             ls -lha
             # Testing with the / for dist
             #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
-            aws s3 --recursive cp dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            aws s3 cp --recursive dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
