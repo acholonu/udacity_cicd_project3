@@ -72,18 +72,21 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
+
       - run:
           name: Install dependencies and lint code
           command: |
             cd backend
             npm i
             #npm run lint # doesn't work
+
       - run:
           name: Back-end build
           command: |
             cd backend
             npm run build
             ls -l # just want to see the list of files
+
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -115,6 +118,7 @@ jobs:
       # Restore from cache
       - restore_cache:
           keys: [backend-build]
+
       # Your job code here
       - run: 
           name: Test Back End
@@ -132,11 +136,13 @@ jobs:
       # Restore from cache
       - restore_cache:
           keys: [backend-build]
+
       # Your job code here
       - run:
           command: |
             cd frontend
             npm install oauth-sign
+
       - run: 
           name: Fix critical dependencies
           command: |
@@ -240,9 +246,7 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      # - restore_cache:  # ensure this step occurs *before* installing dependencies
-      #     #key: python-packages-{{ .Branch }}
-      #     key: python-packages-${CIRCLE_WORKFLOW_ID}
+
       - run:
           # you need awscli for the destroy-environment command
           name: Install dependencies
@@ -251,6 +255,7 @@ jobs:
             pip install -U ansible
             pip install awscli
             python --version
+
       # - run:
       #     name: Simulate Error
       #     command: return 1
@@ -270,6 +275,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
             cat .env
+
       - run:
           name: Configure server
           no_output_timeout: 15m #time out after 15 minutes
@@ -278,17 +284,12 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       #Here's where you will add some code to rollback on failure
+
       - persist_to_workspace:
            root: ~/
            paths:
              - project/backend/.env
-  
-      # - save_cache:
-      #     #key: python-packages-{{ .Branch }}
-      #     key: python-packages-${CIRCLE_WORKFLOW_ID}
-      #     paths:
-      #       - "~/usr/local/bin"
-      #       - "~/usr/local/lib"
+
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
@@ -301,9 +302,11 @@ jobs:
       - checkout
       - restore_cache:
           keys: [backend-build]
+
       # attach workspace
       - attach_workspace:
           at: ~/
+
       - run:
           name: Run migrations
           no_output_timeout: 15m
@@ -313,6 +316,7 @@ jobs:
             touch migrations_log.txt
             npm run migrations >> migrations_log.txt
             cat migrations_log.txt
+
       - run:
           name: Send migration results to memstash
           command: |
@@ -326,6 +330,7 @@ jobs:
               --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
             fi
      # Here's where you will add some code to rollback on failure
+
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations:
@@ -347,7 +352,10 @@ jobs:
           command: |
             # your code here
             yum install -y tar gzip
-            rpm -ql # trying to locate where packages are installed
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
       - run:
           name: Get backend url
           command: |
@@ -355,6 +363,7 @@ jobs:
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             export API_URL="http://${BACKEND_DNS}:3030"
             echo "${API_URL}"
+
       - run:
           name: Build frontend objects
           command: |
@@ -362,11 +371,13 @@ jobs:
             cd frontend
             npm run build
             ls
+
       - run:
           name: Move front end files to S3 candidate bucket
           command: |
             cd frontend
             aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID} --recursive
+
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}" 
@@ -386,17 +397,13 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      # - restore_cache:  # ensure this step occurs *before* installing dependencies
-      #     key: python-package-{{ .Branch }}
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       # your code here
-      #       pip install -U ansible
-      #       sudo apt install tar gzip
-      #       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-      #       unzip awscliv2.zip
-      #       sudo ./aws/install
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            pip install -U ansible
+            pip install awscli
+
       - run:
           name: Deploy backend
           command: |

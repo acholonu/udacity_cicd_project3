@@ -55,7 +55,7 @@ To understand what this project is doing.  I am listing out jobs/steps in the pi
 
 8. **configure-infrastructure**: Goal is to run ansible in the container and tell let ansible ssh into the EC2 instances that you defined in the inventory.txt file.
 
-9. **run-migration**: The container runs the database migration after configuring the .env file.
+9. **run-migration**: The container runs the database migration after configuring the .env file.  The goal is to get the environment settings that are stored in CircleCI interface and get them into the .env file of the candidate EC2 instance application folder.  After it is in the .env file, Ansible needs to make the environment variables available to th
 
 10. **deploy-frontend**: Container that moves frontend files to S3 bucket that will serve our green candidate website for deployment.
 
