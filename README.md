@@ -61,7 +61,11 @@ To understand what this project is doing.  I am listing out jobs/steps in the pi
 
 11. **deploy-backend**: Container that moves the final backend files to the EC2 instance that will serve as our green candidate for deployment.
 
-12. **Smoke Test**:
+12. **Smoke Test**: The goal is to check that the candidate application is on the internet and that you can connect to it.
+
+13. **CloudFront Update**: Replace the blue candidate (aka. the application version currently running as the production application) with green candidate (updated application that just went through the CICD process).
+
+14. **Clean up**:
 
 ### Saving Information in CircleCI
 
