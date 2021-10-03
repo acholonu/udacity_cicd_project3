@@ -387,10 +387,10 @@ jobs:
             aws s3 cp --recursive dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"     
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}" 
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"     
                     
   deploy-backend:
     docker:
@@ -420,10 +420,10 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml
 
       # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"  
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"  
 
   smoke-test:
     docker:
@@ -476,10 +476,10 @@ jobs:
             fi
 
       # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"  
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"  
 
   # cloudfront-update:
   #   docker:
