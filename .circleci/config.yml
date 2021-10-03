@@ -345,9 +345,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      # attach workspace
-      - attach_workspace:
-          at: ~/
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
