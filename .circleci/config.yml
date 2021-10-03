@@ -381,7 +381,8 @@ jobs:
             cd frontend
             ls -lha
             # Testing with the / for dist
-            aws s3 sync dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            aws s3 --recursive cp dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
