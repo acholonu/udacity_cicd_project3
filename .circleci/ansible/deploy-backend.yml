@@ -10,6 +10,3 @@
     - ansible_stdout_callback: yaml
   roles:
     - deploy
-  # environment:
-  #   ENVIRONMENT: production
-  #   TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_HOST') }}"
