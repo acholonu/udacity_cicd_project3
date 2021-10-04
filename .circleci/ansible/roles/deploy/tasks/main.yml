@@ -1,12 +1,24 @@
+- name: "update apt packages"
+  become: yes
+  apt:
+    update_cache: yes
+
 - name: "upgrade packages"
   become: yes
   apt:
     upgrade: "yes"
-   
-# - name: Creates directory 
-#   file:
-#     path: /home/ubuntu/backend
-#     state: directory
+
+- name: "install dependencies"
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: Creates directory 
+  file:
+    path: /home/ubuntu/backend
+    state: directory
 
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
@@ -20,19 +32,19 @@
     src:  /root/project/backend/.env
     dest: /home/ubuntu/backend/
 
-- name: "install package dependencies"
+- name: "Fix critical dependencies"
   become: true
-  command: npm install & npm audit fix --audit-level=critical --force
+  command: npm audit fix & npm audit fix --audit-level=critical --force
   args:
     chdir: /home/ubuntu/backend
 
-- name: "build package"
+- name: "build application"
   become: true
   command: npm run build 
   args:
     chdir: /home/ubuntu/backend
 
-- name: "run migrations again"
+- name: "Run migrations"
   become: true
   command: npm run migrations
   args:    

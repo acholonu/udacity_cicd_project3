@@ -358,7 +358,7 @@ jobs:
             cd frontend
             npm install
             npm audit fix
-            #npm audit fix --audit-level=critical --force
+            npm audit fix --audit-level=critical --force
 
       - run:
           name: Get backend url
@@ -387,10 +387,10 @@ jobs:
             aws s3 cp --recursive dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID}" 
-      # - revert-migrations:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"     
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"     
                     
   deploy-backend:
     docker:
@@ -411,12 +411,25 @@ jobs:
             # your code here
             pip install -U ansible
             pip install awscli
+            apt install nodejs
+            apt install npm
 
       - run:
-          name: Package backend
+          name: Build app
+          command: |
+            cd backend
+            npm install
+            npm audit fix
+            npm audit fix --audit-level=critical --force
+            npm run build
+            ls -ahl
+
+      - run:
+          name: Create an archive backend
           # will use this to copy into EC2 instance
           command: |
             tar cvzf backend.tar.gz backend
+            ls -alh
 
       - run:
           name: Deploy backend
