@@ -357,6 +357,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - restore_cache:
+          keys: [frontend-build-fixed]
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
@@ -367,10 +369,10 @@ jobs:
             yum install gzip tar python3-pip curl -y
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install nodejs npm -y
-            cd frontend
-            npm install
-            npm update
-            npm audit fix
+            #cd frontend
+            #npm install
+            #npm update
+            #npm audit fix
 
       - run:
           name: Get backend url
@@ -411,6 +413,9 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - restore_cache:
+          keys: [backend-build-fixed]
+
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
@@ -430,8 +435,8 @@ jobs:
           name: Build app
           command: |
             cd backend
-            npm install
-            npm audit fix
+            #npm install
+            #npm audit fix
             npm run build
             ls -ahl
 
