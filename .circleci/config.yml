@@ -147,6 +147,7 @@ jobs:
           name: Fix critical dependencies
           command: |
             cd frontend
+            npm install -g npm
             npm update
             npm audit fix --audit-level=critical --force
 
@@ -165,6 +166,7 @@ jobs:
           name: Fix critical dependency at back end
           command: |
             cd backend
+            npm install -g npm
             npm update
             npm audit fix --audit-level=critical --force
 
