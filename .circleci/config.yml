@@ -408,8 +408,8 @@ jobs:
             # your code here
             pip install -U ansible
             pip install awscli
-            apt install nodejs
-            apt install npm
+            sudo apt install nodejs
+            sudo apt install npm
 
       - run:
           name: Build app
