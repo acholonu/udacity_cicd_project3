@@ -16,7 +16,6 @@ commands:
             aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID}/dist
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
-            exit 1
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -38,7 +37,6 @@ commands:
               #  Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
             fi
-            exit 1
           when: on_fail
             
 jobs:
@@ -501,29 +499,38 @@ jobs:
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"  
 
-  # cloudfront-update:
-  #   docker:
-  #     # Docker image here that supports AWS CLI
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     # Checkout code from git
-  #     - checkout
-  #     - run:
-  #         name: Install dependencies
-  #         no_output_timeout: 15m
-  #         command: |
-  #           # your code here
-  #           yum install -y tar
-  #           yum install -y gzip
-  #     - run:
-  #         name: Update cloudfront distribution
-  #         command: |
-  #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
-  #     - destroy-environment:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"
-  #     - revert-migrations:
-  #         workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+  cloudfront-update:
+  # This stage promotes the candidate application to be the production app.
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install dependencies
+          no_output_timeout: 15m
+          command: |
+            # your code here
+            yum install -y tar
+            yum install -y gzip
+
+      - run:
+          name: Get old distribution
+          command: |
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            # your code here
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
 # cleanup:
 #     docker:
