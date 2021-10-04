@@ -78,6 +78,8 @@ jobs:
           command: |
             cd backend
             npm i
+            npm update
+            npm audit fix
             #npm run lint # doesn't work
 
       - run:
@@ -135,7 +137,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-build]
+          keys: [frontend-build-fixed]
 
       # Your job code here
       - run:
@@ -147,9 +149,12 @@ jobs:
           name: Fix critical dependencies
           command: |
             cd frontend
-            npm install -g npm
+            npm install
             npm update
             npm audit fix --audit-level=critical --force
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build-fixed
 
   scan-backend:
     docker:
@@ -160,15 +165,18 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build-fixed]
       # Your job code here
       - run: 
           name: Fix critical dependency at back end
           command: |
             cd backend
-            npm install -g npm
+            npm install
             npm update
             npm audit fix --audit-level=critical --force
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build-fixed
 
   deploy-infrastructure:
     docker:
