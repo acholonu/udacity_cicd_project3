@@ -485,7 +485,8 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            if curl -s --head s3://udapeople-${CIRCLE_WORKFLOW_ID} 
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com"
+            if curl -s --head $URL 
             then
               echo "Connected to frontend using the S3 url"
               return 0
