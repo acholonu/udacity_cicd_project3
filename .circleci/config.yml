@@ -52,6 +52,7 @@ jobs:
           command: |
             cd frontend
             npm i
+            npm update
             npm audit fix
             #npm run lint # doesn't work
       - run:
@@ -146,6 +147,7 @@ jobs:
           name: Fix critical dependencies
           command: |
             cd frontend
+            npm update
             npm audit fix --audit-level=critical --force
 
   scan-backend:
@@ -163,6 +165,7 @@ jobs:
           name: Fix critical dependency at back end
           command: |
             cd backend
+            npm update
             npm audit fix --audit-level=critical --force
 
   deploy-infrastructure:
@@ -355,6 +358,7 @@ jobs:
             yum install nodejs npm -y
             cd frontend
             npm install
+            npm update
             npm audit fix
 
       - run:
