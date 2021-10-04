@@ -356,7 +356,6 @@ jobs:
             cd frontend
             npm install
             npm audit fix
-            npm audit fix --audit-level=critical --force
 
       - run:
           name: Get backend url
@@ -418,7 +417,6 @@ jobs:
             cd backend
             npm install
             npm audit fix
-            npm audit fix --audit-level=critical --force
             npm run build
             ls -ahl
 
@@ -516,16 +514,35 @@ jobs:
             yum install -y gzip
 
       - run:
-          name: Get old distribution
+          name: Get old distribution values
           command: |
             export OLD_WORKFLOW_ID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
 
+            echo "OLD_WORKFLOW_ID = ${OLD_WORKFLOW_ID}"
+
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+
       - run:
           name: Update cloudfront distribution
           command: |
             # your code here
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name udapeople-cloudfront \ 
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"\
+              --tags project=udapeople &
+
+            if [[ "${STACKS[@]}" =~ "${OLD_WORKFLOW_ID}"]]
+            then
+              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
+            fi
+
+
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
@@ -587,7 +604,7 @@ workflows:
           requires: [run-migrations, deploy-frontend]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
+      - cloudfront-update:
+          requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
