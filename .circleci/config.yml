@@ -100,9 +100,11 @@ jobs:
       # Restore from cache
       - restore_cache:
           keys: [frontend-build]
+          
       # Your job code here
       - run: 
           name: test front end
+          no_output_timeout: 15m
           command: |
             cd frontend
             npm test
@@ -521,18 +523,6 @@ jobs:
             yum install -y gzip
 
       - run:
-          name: Get old distribution values
-          command: |
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
-
-            echo "OLD_WORKFLOW_ID = ${OLD_WORKFLOW_ID}"
-
-            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-
-      - run:
           name: Update cloudfront distribution
           command: |
             # your code here
@@ -542,47 +532,46 @@ jobs:
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"\
               --tags project=udapeople &
 
-            if [[ "${STACKS[@]}" =~ "${OLD_WORKFLOW_ID}"]]
-            then
-              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
-            fi
-
-
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
-# cleanup:
-#     docker:
-#       # Docker image here
-#       - image: amazon/aws-cli
-#     steps:
-#       # Checkout code from git
-#       - checkout
-#       - run:
-#           name: Install tar utility
-#           no_output_timeout: 15m
-#           command: |
-#             yum install -y tar gzip
-#       - run:
-#           name: Get old stack workflow id
-#           command: |
-#             # your code here
-#             export OldWorkflowID="the id here"
-#             export STACKS=[] #put the list of stacks here
-#       - run:
-#           name: Remove old stacks and files
-#           command: |
-#             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
-#             then
-#               # your code here
-#             fi
-            
+cleanup:
+    docker:
+      # Docker image here
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Install tar utility
+          no_output_timeout: 15m
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Get old stack workflow id
+          command: |
+            # your code here
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
 
+            echo "OLD_WORKFLOW_ID = ${OLD_WORKFLOW_ID}"
+
+            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+      - run:
+          name: Remove old stacks and files
+          command: |
+            if [[ "${STACKS[@]}" =~ "${OLD_WORKFLOW_ID}"]]
+            then
+              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
+            fi
+            
 workflows:
   default:
     jobs:
@@ -613,5 +602,5 @@ workflows:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - cleanup:
+          requires: [cloudfront-update]
