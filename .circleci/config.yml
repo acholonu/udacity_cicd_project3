@@ -52,6 +52,7 @@ jobs:
           command: |
             cd frontend
             npm i
+            npm update
             npm audit fix
             #npm run lint # doesn't work
       - run:
@@ -538,7 +539,7 @@ jobs:
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"      
 
-cleanup:
+  cleanup:
     docker:
       # Docker image here
       - image: amazon/aws-cli
