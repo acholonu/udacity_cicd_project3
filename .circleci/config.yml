@@ -52,7 +52,6 @@ jobs:
           command: |
             cd frontend
             npm i
-            npm update
             npm audit fix
             #npm run lint # doesn't work
       - run:
@@ -78,8 +77,6 @@ jobs:
           command: |
             cd backend
             npm i
-            npm update
-            npm audit fix
             #npm run lint # doesn't work
 
       - run:
@@ -124,6 +121,7 @@ jobs:
       # Your job code here
       - run: 
           name: Test Back End
+          no_output_timeout: 15m 
           command: |
             cd backend
             npm test
@@ -137,7 +135,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend-build-fixed]
+          keys: [frontend-build]
 
       # Your job code here
       - run:
@@ -152,9 +150,7 @@ jobs:
             npm install
             npm update
             npm audit fix --audit-level=critical --force
-      - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build-fixed
+
 
   scan-backend:
     docker:
@@ -165,7 +161,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-build-fixed]
+          keys: [backend-build]
       # Your job code here
       - run: 
           name: Fix critical dependency at back end
@@ -175,9 +171,6 @@ jobs:
             npm install
             npm update
             npm audit fix --audit-level=critical --force
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build-fixed
 
   deploy-infrastructure:
     docker:
@@ -314,7 +307,7 @@ jobs:
       # Checkout code from git
       - checkout
       - restore_cache:
-          keys: [backend-build-fixed]
+          keys: [backend-build]
 
       # attach workspace
       - attach_workspace:
@@ -366,13 +359,10 @@ jobs:
           no_output_timeout: 15m
           command: |
             # your code here
-            yum install gzip tar python3-pip curl -y
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install nodejs npm -y
-            #cd frontend
-            #npm install
-            #npm update
-            #npm audit fix
+            yum install -y tar gzip
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
 
       - run:
           name: Get backend url
@@ -413,9 +403,6 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - restore_cache:
-          keys: [backend-build-fixed]
-
       # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
