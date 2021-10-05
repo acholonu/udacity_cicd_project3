@@ -108,6 +108,7 @@ jobs:
           no_output_timeout: 15m
           command: |
             cd frontend
+            npm i
             npm test
                 
   test-backend:
