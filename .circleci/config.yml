@@ -417,8 +417,9 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install python3-pip -y # not sure if it is yum or apt
+            python --version
             #sudo apt-get install python3 -y
-            #python -m ensurepip --upgrade # install pip
+            python -m ensurepip --upgrade # install pip
             pip install awscli
             pip install ansible
 
@@ -429,6 +430,10 @@ jobs:
             #npm i
             npm run build
             ls -l # just want to see the list of files
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
        
   deploy-backend-old:
     docker:
