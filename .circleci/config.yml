@@ -415,7 +415,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install gzip tar python3-pip curl -y # not sure if it is yum or apt
+            sudo apt install gzip tar python3-pip curl -y # not sure if it is yum or apt
             pip install awscli
             pip install ansible
 
