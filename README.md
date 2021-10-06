@@ -110,6 +110,7 @@ In CircleCI an executor is related to what base operating system (MacOS, Linus, 
 - [AWS CLI S3 Command Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/sync.html)
 - [difference btw aws cp and aws sync:](https://stackoverflow.com/questions/64728076/aws-s3-cp-vs-aws-s3-sync-behavior-and-cost)
 - [Setting up a prometheus server on an EC2 instance](https://codewizardly.com/prometheus-on-aws-ec2-part1/)
+- [How to use the vi editor on linux](https://staff.washington.edu/rells/R110/)
 
 ---
 
