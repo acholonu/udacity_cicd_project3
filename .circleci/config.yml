@@ -399,11 +399,38 @@ jobs:
           workflow_id: "${CIRCLE_WORKFLOW_ID}" 
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"     
-                    
+
   deploy-backend:
     docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      # attach workspace
+      - attach_workspace:
+          at: ~/
+      - add_ssh_keys:
+          fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
+      - run:
+          name: Install dependencies
+          command: |
+            yum install gzip tar python3-pip curl -y # not sure if it is yum or apt
+            pip install awscli
+            pip install ansible
+
+      - run:
+          name: Backend build
+          command: |
+            cd backend
+            #npm i
+            npm run build
+            ls -l # just want to see the list of files
+       
+  deploy-backend-old:
+    docker:
       # Docker image here that supports Ansible
-      - image: circleci/python
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
       - checkout
@@ -417,25 +444,18 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
+            yum install gzip tar python3-pip curl -y
+            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            yum install nodejs npm -y
             pip install -U ansible
-            pip install awscli
-            sudo apt install nodejs
-            sudo apt install npm
-
-      - run:
-          name: Update NPM packages
-          command: |
-            cd backend
-            npm install --registry=https://registry.npmjs.org/ latest-version
-            npm --version
-            npm update
-            npm audit fix --audit-level=critical --force
-
+            cd frontend
+            npm install
+            npm audit fix
+            
       - run:
           name: Build app
           command: |
             cd backend
-            npm audit fix --audit-level=critical --force
             npm run build
             ls -ahl
 
