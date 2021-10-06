@@ -418,10 +418,9 @@ jobs:
             sudo apt-get update
             sudo apt-get install python3-pip -y # not sure if it is yum or apt
             python --version
-            #sudo apt-get install python3 -y
-            python -m ensurepip --upgrade # install pip
-            pip install awscli
-            pip install ansible
+            pip3 --version
+            pip3 install awscli
+            pip3 install ansible
 
       - run:
           name: Backend build
