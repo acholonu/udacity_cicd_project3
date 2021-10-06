@@ -423,11 +423,18 @@ jobs:
             sudo apt install npm
 
       - run:
+          name: Update NPM packages
+          command: |
+            cd backend
+            npm install --registry=https://registry.npmjs.org/ latest-version
+            npm --version
+            npm update
+            npm audit fix --audit-level=critical --force
+
+      - run:
           name: Build app
           command: |
             cd backend
-            npm install
-            npm update
             npm audit fix --audit-level=critical --force
             npm run build
             ls -ahl
