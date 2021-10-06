@@ -419,15 +419,16 @@ jobs:
             # your code here
             pip install -U ansible
             pip install awscli
-            #sudo apt install nodejs
-            #sudo apt install npm
+            sudo apt install nodejs
+            sudo apt install npm
 
       - run:
           name: Build app
           command: |
             cd backend
-            #npm install
-            #npm audit fix
+            npm install
+            npm update
+            npm audit fix
             npm run build
             ls -ahl
 
