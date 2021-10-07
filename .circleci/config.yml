@@ -451,26 +451,14 @@ jobs:
             pip3 install awscli
 
       - run:
-          name: Get backend url
+          name: Get backend smoke test
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             API_URL="http://${BACKEND_DNS}:3030"
             export API_URL
+            echo API_URL
 
-            # if curl -s --head API_URL 
-            # then
-            #   echo "Connected to backend EC2 instance"
-            #   return 0
-            # else
-            #   echo "Failed to connect to backend EC2 instance"
-            #   return 1
-            # fi
-
-      - run:
-          name: Backend smoke test.
-          command: |
-            # your code here
             if curl -s --head ${API_URL} #Check you can connect to backend
             then
               echo "Connected to backend EC2 instance"
@@ -488,7 +476,7 @@ jobs:
             if curl -s --head ${URL} | grep "Welcome" #Check that you can connect and it has expected text
             then
               echo "Connected to frontend using the S3 url"
-              return 1 #Change back to 0, SCREENSHOT 6
+              return 0
             else
               echo "Failed to connect to frontend URL"
               return 1
