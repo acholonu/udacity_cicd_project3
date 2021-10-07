@@ -432,59 +432,7 @@ jobs:
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
-       
-  deploy-backend-old:
-    docker:
-      # Docker image here that supports Ansible
-      - image: amazon/aws-cli
-    steps:
-      # Checkout code from git
-      - checkout
-      # Add ssh keys with fingerprint
-      - add_ssh_keys:
-          fingerprints: [63:01:4c:08:9c:09:4e:03:fa:b1:40:43:37:e7:54:eb]
-      # attach workspace
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
-            yum install gzip tar python3-pip curl -y
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install nodejs npm -y
-            pip install -U ansible
-            cd frontend
-            npm install
-            npm audit fix
-            
-      - run:
-          name: Build app
-          command: |
-            cd backend
-            npm run build
-            ls -ahl
-
-      - run:
-          name: Create an archive backend
-          # will use this to copy into EC2 instance
-          command: |
-            tar cvzf backend.tar.gz backend
-            ls -alh
-
-      - run:
-          name: Deploy backend
-          command: |
-            # your code here
-            cd .circleci/ansible
-            ansible-playbook -i inventory.txt deploy-backend.yml
-
-      # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"  
+          workflow_id: "${CIRCLE_WORKFLOW_ID}"   
 
   smoke-test:
     docker:
@@ -510,11 +458,20 @@ jobs:
             API_URL="http://${BACKEND_DNS}:3030"
             export API_URL
 
+            # if curl -s --head API_URL 
+            # then
+            #   echo "Connected to backend EC2 instance"
+            #   return 0
+            # else
+            #   echo "Failed to connect to backend EC2 instance"
+            #   return 1
+            # fi
+
       - run:
           name: Backend smoke test.
           command: |
             # your code here
-            if curl -s --head $API_URL 
+            if curl -s --head ${API_URL} 
             then
               echo "Connected to backend EC2 instance"
               return 0
