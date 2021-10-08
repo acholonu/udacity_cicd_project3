@@ -492,15 +492,21 @@ jobs:
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             API_URL="http://$BACKEND_DNS:3030/api/status"
-            export API_URL
-            echo $API_URL
+            BACKEND_URL=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-deployment-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query "Reservations[*].Instances[*].[PublicDnsName]" \
+              --output text)
 
-            if curl -s --head $API_URL #Check you can connect to backend
+            # curl "http://${BACKEND_URL}:3030/api/status"
+            URL="http://${BACKEND_URL}:3030/api/status"
+            echo "API_URL: $API_URL, BACKEND_URL: $BACKEND_URL"
+
+            if curl -s --head $URL #Check you can connect to backend
             then
-              echo "SUCCESS: Connected to backend EC2 instance: $API_URL"
+              echo "SUCCESS: Connected to backend EC2 instance: $URL"
               return 0
             else
-              echo "FAILURE: Failed to connect to backend EC2 instance: $API_URL"
+              echo "FAILURE: Failed to connect to backend EC2 instance: $URL"
               return 1
             fi
 
