@@ -461,10 +461,10 @@ jobs:
 
             if curl -s --head $API_URL #Check you can connect to backend
             then
-              echo "Connected to backend EC2 instance"
+              echo "SUCCESS: Connected to backend EC2 instance"
               return 0
             else
-              echo "Failed to connect to backend EC2 instance: $API_URL"
+              echo "FAILURE: Failed to connect to backend EC2 instance: $API_URL"
               return 1
             fi
 
@@ -475,18 +475,18 @@ jobs:
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com"
             if curl -s --head $URL | grep "Welcome" #Check that you can connect and it has expected text
             then
-              echo "Connected to frontend using the S3 url"
+              echo "SUCCESS: Connected to frontend using the S3 url"
               return 1
             else
-              echo "Failed to connect to frontend URL: $URL"
+              echo "FAILURE: Failed to connect to frontend URL: $URL"
               return 1
             fi
 
       # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"  
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID}"  
 
   cloudfront-update:
   # This stage promotes the candidate application to be the production app.
