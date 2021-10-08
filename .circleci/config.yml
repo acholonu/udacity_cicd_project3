@@ -464,7 +464,7 @@ jobs:
               echo "Connected to backend EC2 instance"
               return 0
             else
-              echo "Failed to connect to backend EC2 instance"
+              echo "Failed to connect to backend EC2 instance: $API_URL"
               return 1
             fi
 
@@ -476,9 +476,9 @@ jobs:
             if curl -s --head $URL | grep "Welcome" #Check that you can connect and it has expected text
             then
               echo "Connected to frontend using the S3 url"
-              return 0
+              return 1
             else
-              echo "Failed to connect to frontend URL"
+              echo "Failed to connect to frontend URL: $URL"
               return 1
             fi
 
