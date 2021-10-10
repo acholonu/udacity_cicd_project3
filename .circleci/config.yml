@@ -13,7 +13,7 @@ commands:
           when: on_fail
           command: |
             # Your code here
-            # aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID}/ #COMMENTED OUT FOR TESTING PURPOSE.  KEEP THIS LINE
+            aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID}/
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
@@ -62,7 +62,6 @@ jobs:
             npm run build
             ls -alh # What is in the frontend 
             ls -alh dist # What is in the distribution
-            return 1 # want it to stop here
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -394,7 +393,7 @@ jobs:
             ls -lha
             # Testing with the / for dist
             #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
-            aws s3 cp --recursive dist/ s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            aws s3 cp --recursive . s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
