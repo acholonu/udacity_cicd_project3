@@ -60,7 +60,8 @@ jobs:
           command: |
             cd frontend
             npm run build
-            ls -alh
+            ls -alh # What is in the frontend 
+            ls -alh dist # What is in the distribution
             return 1 # want it to stop here
       - save_cache:
           paths: [frontend/node_modules]
