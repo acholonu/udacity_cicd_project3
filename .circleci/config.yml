@@ -13,7 +13,7 @@ commands:
           when: on_fail
           command: |
             # Your code here
-            #aws s3 rm --recursive s3://udapeople-${CIRCLE_WORKFLOW_ID}/
+            #aws s3 rm --recursive s3://udapeople-<<parameters.workflow_id>>/
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
@@ -195,16 +195,16 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udacity-project3-backend \
-              --stack-name "uda-backend-stack-${CIRCLE_WORKFLOW_ID}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
+              --stack-name "uda-backend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udacity-project3-frontend \
-              --stack-name "uda-frontend-stack-${CIRCLE_WORKFLOW_ID}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID}"  
+              --stack-name "uda-frontend-stack-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
 
       # Variables in bash: https://ryanstutorials.net/bash-scripting-tutorial/bash-variables.php
       - run:
@@ -242,7 +242,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"      
 
   configure-infrastructure:
     docker:
@@ -302,7 +302,7 @@ jobs:
              - project/backend/.env
 
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"      
 
   run-migrations:
     docker:
@@ -335,17 +335,17 @@ jobs:
             cd backend
             if grep -q "has been executed successfully" migrations.txt; then 
               curl -H "Content-Type: text/plain" -H "token: cc617a5f-16d6-4cf2-b341-92a478b4e9a8" \
-              --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             else
               curl -H "Content-Type: text/plain" -H "token: cc617a5f-16d6-4cf2-b341-92a478b4e9a8" \
-              --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+              --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
      # Here's where you will add some code to rollback on failure
 
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
          
 
   deploy-frontend:
@@ -392,14 +392,14 @@ jobs:
             cd frontend
             ls -lha
             # Testing with the / for dist
-            #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
-            aws s3 cp --recursive . s3://udapeople-${CIRCLE_WORKFLOW_ID} # This should copy to S3 bucket
+            #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
+            aws s3 cp --recursive dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"     
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"     
 
   deploy-backend:
     docker:
@@ -431,9 +431,9 @@ jobs:
             npm run build
             ls -l # just want to see the list of files
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"   
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
   smoke-test-frontend:
     docker:
@@ -455,7 +455,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            URL="https://udapeople-${CIRCLE_WORKFLOW_ID}.s3-website-us-east-1.amazonaws.com/index.html"
+            URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/index.html"
             if curl -s $URL | grep "Welcome" #Check that you can connect and it has expected text
             then
               echo "SUCCESS: Connected to frontend using the S3 url"
@@ -466,9 +466,9 @@ jobs:
             fi
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}" 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
 
   smoke-test-backend:
@@ -513,9 +513,9 @@ jobs:
 
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"  
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 
   cloudfront-update:
@@ -541,14 +541,14 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront \ 
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID}"\
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
               --tags project=udapeople &
 
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID}"      
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"      
 
   cleanup:
     docker:
