@@ -114,6 +114,7 @@ In CircleCI an executor is related to what base operating system (MacOS, Linus, 
 - [How to use the vi editor on linux](https://staff.washington.edu/rells/R110/)
   - Had to use this command a lot to save: `:w !sudo tee %`, then type (L) load <https://stackoverflow.com/questions/14948441/vim-cant-save-file-e212/14948510>
 - [SCP command for copying from local machine to EC2 instance](https://angus.readthedocs.io/en/2014/amazon/transfer-files-between-instance.html)
+- [Installing Atom on Ubuntu linux machine](https://linuxize.com/post/how-to-install-atom-text-editor-on-ubuntu-20-04/)
 
 ---
 

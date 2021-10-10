@@ -60,7 +60,8 @@ jobs:
           command: |
             cd frontend
             npm run build
-            ls -l
+            ls -alh
+            return 1 # want it to stop here
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -499,7 +500,7 @@ jobs:
 
             # curl "http://${BACKEND_URL}:3030/api/status"
             URL="http://${BACKEND_URL}:3030/api/status"
-            echo "API_URL: $API_URL, BACKEND_URL: $BACKEND_URL"
+            echo "@@@TESTING: API_URL: $API_URL, BACKEND_URL: $BACKEND_URL"
 
             if curl -s --head $URL #Check you can connect to backend
             then
