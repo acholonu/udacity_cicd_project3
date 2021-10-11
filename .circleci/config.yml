@@ -396,6 +396,8 @@ jobs:
             # Testing with the / for dist
             #aws s3 sync dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
             aws s3 cp --recursive dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
+            # make index.html public
+            aws s3api put-object-acl --bucket udapeople-${CIRCLE_WORKFLOW_ID:0:7} --key index.html --acl public-read
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
