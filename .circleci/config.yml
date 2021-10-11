@@ -393,7 +393,7 @@ jobs:
           command: |
             cd frontend/dist
             ls -lha
-            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --delete #This should copy to S3 bucket
+            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --acl public-read --delete #This should copy to S3 bucket
             
             #aws s3 cp --recursive dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
             # make index.html public
@@ -459,8 +459,10 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/index.html"
-            if curl -s $URL | grep "Welcome" #Check that you can connect and it has expected text
+            URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html"
+            #Check that you can connect and it has expected text
+            echo $URL
+            if curl -s $URL | grep "Welcome"
             then
               echo "SUCCESS: Connected to frontend using the S3 url"
               return 0
