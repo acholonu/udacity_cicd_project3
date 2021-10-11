@@ -614,11 +614,11 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations, deploy-frontend]
-      # - smoke-test-frontend:
-      #     requires: [deploy-backend]
-      # - smoke-test-backend:
-      #     requires: [smoke-test-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test-backend]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - smoke-test-frontend:
+          requires: [deploy-backend]
+      - smoke-test-backend:
+          requires: [smoke-test-frontend]
+      - cloudfront-update:
+          requires: [smoke-test-backend]
+      - cleanup:
+          requires: [cloudfront-update]
