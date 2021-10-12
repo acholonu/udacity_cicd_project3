@@ -39,7 +39,7 @@ commands:
               #  Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
             fi
-            exit 1
+            exit 0
           when: on_fail
             
 jobs:
@@ -457,10 +457,11 @@ jobs:
           name: Frontend smoke test.
           command: |
             # your code here
-            URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html"
+            #URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html"
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com"
             
             #Check that you can connect and it has expected text
-            if curl -s $URL | grep "Welcome"
+            if curl $URL | grep "Welcome"
             then
               echo "SUCCESS: Connected to frontend using the S3 URL: $URL"
               return 0
