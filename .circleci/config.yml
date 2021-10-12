@@ -505,7 +505,7 @@ jobs:
               --query "Reservations[*].Instances[*].[PublicDnsName]" \
               --output text)
 
-            # curl "http://${BACKEND_URL}:3030/api/status"
+            CURL_RESULTS=$(curl "http://${BACKEND_URL}:3030/api/status")
             URL="http://${BACKEND_URL}:3030/api/status"
             echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL}"
 
@@ -517,6 +517,7 @@ jobs:
               echo "FAILURE: Failed to connect to backend EC2 instance: $URL"
               return 1
             fi
+            echo "CURL RESULTS: ${CURL_RESULTS}"
 
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
