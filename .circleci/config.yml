@@ -469,7 +469,7 @@ jobs:
             fi
 
             echo curl -s $URL | grep "Welcome"
-            
+
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
@@ -616,8 +616,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations, deploy-frontend]
-      - smoke-test-frontend:
-          requires: [deploy-backend]
+      # - smoke-test-frontend:
+      #     requires: [deploy-backend]
       - smoke-test-backend:
           requires: [smoke-test-frontend]
       - cloudfront-update:
