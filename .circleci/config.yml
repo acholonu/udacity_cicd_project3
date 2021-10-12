@@ -505,7 +505,7 @@ jobs:
               --output text)
 
             URL="http://${BACKEND_URL}:3030/api/status"
-            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL}  BACKEND_DNS: ${BACKEND_DNS}" URL: ${URL}"
+            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL}  BACKEND_DNS: ${BACKEND_DNS} URL: ${URL}"
 
             #Check you can connect to backend
             if curl ${URL}
