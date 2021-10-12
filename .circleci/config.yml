@@ -39,6 +39,7 @@ commands:
               #  Add revert code here. You can find this in the Getting Started section.
               npm run migrations:revert
             fi
+            exit 1
           when: on_fail
             
 jobs:
@@ -506,9 +507,9 @@ jobs:
 
             # curl "http://${BACKEND_URL}:3030/api/status"
             URL="http://${BACKEND_URL}:3030/api/status"
-            echo "@@@TESTING: API_URL: $API_URL, BACKEND_URL: $BACKEND_URL"
+            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL}"
 
-            if curl -s --head $URL #Check you can connect to backend
+            if curl ${URL} #Check you can connect to backend
             then
               echo "SUCCESS: Connected to backend EC2 instance: $URL"
               return 0
