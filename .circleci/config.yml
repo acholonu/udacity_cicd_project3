@@ -460,11 +460,12 @@ jobs:
           command: |
             # your code here
             URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html"
+            
             #Check that you can connect and it has expected text
-            echo $URL
-            if curl -s $URL | grep "Welcome"
+            #if curl -s $URL | grep "Welcome"
+            if curl -s https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html | grep "Welcome"
             then
-              echo "SUCCESS: Connected to frontend using the S3 url"
+              echo "SUCCESS: Connected to frontend using the S3 URL: $URL"
               return 0
             else
               echo "FAILURE: Failed to connect to frontend URL: $URL"
