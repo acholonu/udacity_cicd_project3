@@ -465,7 +465,7 @@ jobs:
               return 0
             else
               echo "FAILURE: Failed to connect to frontend URL: $URL"
-              return 0
+              return 1
             fi
 
             echo (curl -s $URL | grep "Welcome")
