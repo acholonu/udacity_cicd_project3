@@ -385,7 +385,7 @@ jobs:
             # your code here
             cd frontend
             npm run build
-            ls
+            ls -lha
 
       - run:
           # difference btw aws cp and aws sync: https://stackoverflow.com/questions/64728076/aws-s3-cp-vs-aws-s3-sync-behavior-and-cost
@@ -393,11 +393,8 @@ jobs:
           command: |
             cd frontend/dist
             ls -lha
-            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --acl public-read --delete #This should copy to S3 bucket
-            
-            #aws s3 cp --recursive dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} # This should copy to S3 bucket
-            # make index.html public
-            #aws s3api put-object-acl --bucket udapeople-${CIRCLE_WORKFLOW_ID:0:7} --key index.html --acl public-read
+            # This should copy to S3 bucket
+            aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --acl public-read --delete
             
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
@@ -462,8 +459,7 @@ jobs:
             URL="https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html"
             
             #Check that you can connect and it has expected text
-            #if curl -s $URL | grep "Welcome"
-            if curl -s https://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/index.html | grep "Welcome"
+            if curl -s $URL | grep "Welcome"
             then
               echo "SUCCESS: Connected to frontend using the S3 URL: $URL"
               return 0
@@ -471,6 +467,9 @@ jobs:
               echo "FAILURE: Failed to connect to frontend URL: $URL"
               return 1
             fi
+
+            echo curl -s $URL | grep "Welcome"
+            
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
