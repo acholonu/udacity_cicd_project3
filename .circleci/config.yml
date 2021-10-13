@@ -16,7 +16,7 @@ commands:
             echo s3://udapeople-<<parameters.workflow_id>>/
             echo uda-frontend-stack-<<parameters.workflow_id>>
             #aws s3 rm --recursive s3://udapeople-<<parameters.workflow_id>>/
-            aws s3 rb s3://udapeople-<<>parameters.workflow_id> --force
+            aws s3 rb s3://udapeople-<<parameters.workflow_id>> --force
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
