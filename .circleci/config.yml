@@ -485,6 +485,8 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -505,20 +507,17 @@ jobs:
               --output text)
 
             URL="http://${BACKEND_URL}:3030/api/status"
-            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL}  BACKEND_DNS: ${BACKEND_DNS} URL: ${URL}"
+            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL} URL: ${URL}"
 
             #Check you can connect to backend
             if curl ${URL}
             then
-              echo "SUCCESS: Connected to backend EC2 instance: $URL"
+              echo "SUCCESS: Connected to backend EC2 instance: ${URL}"
               return 0
             else
-              echo "FAILURE: Failed to connect to backend EC2 instance: $URL"
+              echo "FAILURE: Failed to connect to backend EC2 instance: ${URL}"
               return 1
             fi
-
-            CURL_RESULTS=$(curl "http://${BACKEND_URL}:3030/api/status")
-            echo "CURL RESULTS: ${CURL_RESULTS}"
 
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
