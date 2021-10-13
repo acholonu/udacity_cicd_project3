@@ -35,4 +35,5 @@
 - name: "Start backend server using pm2"
   shell: |
     cd /home/ubuntu/backend
+    cd dist #not sure if needed
     pm2 start npm --name backend -- start 

@@ -16,6 +16,7 @@ commands:
             echo s3://udapeople-<<parameters.workflow_id>>/
             echo uda-frontend-stack-<<parameters.workflow_id>>
             #aws s3 rm --recursive s3://udapeople-<<parameters.workflow_id>>/
+            aws s3 rb s3://udapeople-<<>parameters.workflow_id> --force
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
@@ -143,7 +144,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend-build]
+          keys: [scan-frontend]
 
       # Your job code here
       - run:
@@ -158,6 +159,10 @@ jobs:
             npm install
             npm update
             npm audit fix --audit-level=critical --force
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: scan-frontend
+      
 
 
   scan-backend:
@@ -169,7 +174,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-build]
+          keys: [scan-backend]
       # Your job code here
       - run: 
           name: Fix critical dependency at back end
@@ -179,6 +184,10 @@ jobs:
             npm install
             npm update
             npm audit fix --audit-level=critical --force
+      - save_cache:
+          paths: [backend/node_modules]
+          key: scan-backend
+
 
   deploy-infrastructure:
     docker:
@@ -243,6 +252,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+            - project/backend/
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"      
@@ -378,7 +388,7 @@ jobs:
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             export API_URL="http://${BACKEND_DNS}:3030"
-            echo "${API_URL}"
+            echo "${API_URL}" > frontend/.env
 
       - run:
           name: Build frontend objects
@@ -507,10 +517,9 @@ jobs:
               --output text)
 
             URL="http://${BACKEND_URL}:3030/api/status"
-            echo "@@@TESTING: API_URL: ${API_URL}, BACKEND_URL: ${BACKEND_URL} URL: ${URL}"
 
             #Check you can connect to backend
-            if curl ${URL}
+            if curl ${URL} | grep '"status":"ok"'
             then
               echo "SUCCESS: Connected to backend EC2 instance: ${URL}"
               return 0
