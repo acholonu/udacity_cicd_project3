@@ -431,7 +431,7 @@ jobs:
             cd backend
             #npm i
             npm run build
-            ls -l # just want to see the list of files
+            ls -lha # just want to see the list of files
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
