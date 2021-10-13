@@ -429,7 +429,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install python3-pip -y # not sure if it is yum or apt
+            sudo apt-get install gzip tar python3-pip -y # not sure if it is yum or apt
             python --version
             pip3 --version
             pip3 install awscli
@@ -442,6 +442,17 @@ jobs:
             #npm i
             npm run build
             ls -lha # just want to see the list of files
+
+      - run:
+          name: Save Build to Tar File
+          command: |
+            cd backend
+            tar -zcvf backend.tar.gz .
+
+      - persist_to_workspace:
+           root: ~/
+           paths:
+             - project/backend/backend.tar.gz
 
       - run:
           name: Deploy Backend
