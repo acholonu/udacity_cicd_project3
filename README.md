@@ -39,6 +39,8 @@ Note the actually code for the application that is being deployed is in the back
 
 To understand what this project is doing.  I am listing out jobs/steps in the pipeline (i.e., workflow), and trying to explain them. Note, each job is done within a container.  We specify the container to use.
 
+```![Summary of Process](./img/proje)```
+
 1. **Build Frontend**: Use this container to take the front end code and create the binary (computer readable version of the code) that will be executed. This requires installing dependencies, checking the code style fits expectation, and then finally creating the binary. To prevent constantly having to install the dependencies, after the first run of the workflow, all subsequent workflows will use the dependencies store in the cache.
 
 2. **Build Backend**: Similar to build front end, but use this container to build (compile) the backend binary.  Want to make sure there is no syntax errors.
