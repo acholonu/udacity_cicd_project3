@@ -448,25 +448,25 @@ jobs:
       - run:
           name: Compress and save build objects to tar File
           command: |
-            cd backend/dist
+            cd backend
             touch backend.tar.gz
-            tar --exclude=backend.tar.gz -zcvf backend.tar.gz .
+            tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
 
       - persist_to_workspace:
            root: ~/
            paths:
-             - project/backend/dist/backend.tar.gz
-             
+             - project/backend/backend.tar.gz
+
       - run:
           name: Deploy Backend
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
 
-      - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
+      # - destroy-environment:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
   smoke-test-frontend:
     docker:

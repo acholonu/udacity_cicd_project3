@@ -23,8 +23,8 @@
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
-    src: ~/project/backend.tar.gz
-    dest: /home/ubuntu
+    src: /root/project/backend/backend.tar.gz
+    dest: /home/ubuntu/backend/
 
 - name: "deploy backend app to new location"
   become: true
