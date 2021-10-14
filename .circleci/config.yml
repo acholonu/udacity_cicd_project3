@@ -450,8 +450,9 @@ jobs:
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
             ls -l
+            
             cd backend
-            ls -l
+            ls -lh
 
             sudo cp backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files/
             ls -lha /root/project/.circleci/ansible/roles/deploy/files/
