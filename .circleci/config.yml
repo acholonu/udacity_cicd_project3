@@ -448,8 +448,7 @@ jobs:
       - run:
           name: Compress and save build objects to tar File
           command: |
-            #cd backend
-            tar -C backend -czvf backend.tar.gz .
+            tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
             #touch backend.tar.gz
             #tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
 
@@ -460,6 +459,7 @@ jobs:
 
       - run:
           name: Deploy Backend
+          no_output_timeout: 30m
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
