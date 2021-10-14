@@ -455,8 +455,8 @@ jobs:
       - persist_to_workspace:
            root: ~/
            paths:
-             - project/backend/backend.tar.gz
-
+             - project/backend/dist/backend.tar.gz
+             
       - run:
           name: Deploy Backend
           command: |
