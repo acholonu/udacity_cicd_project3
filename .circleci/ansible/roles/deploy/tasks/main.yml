@@ -15,10 +15,10 @@
     state: latest
     update_cache: yes
 
-# - name: Copy backend dist files to remote server
-#   copy:
-#     src: /root/project/backend
-#     dest: /home/ubuntu
+- name: Copy backend dist files to remote server
+  copy:
+    src: /root/project/test.md
+    dest: /home/ubuntu
 
 - name: Creates directory 
   file:
