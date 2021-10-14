@@ -15,7 +15,7 @@
     state: latest
     update_cache: yes
 
-- name: Copy backend dist files to remote server
+- name: Copy test file to remote server
   copy:
     src: /root/project/test.md
     dest: /home/ubuntu
