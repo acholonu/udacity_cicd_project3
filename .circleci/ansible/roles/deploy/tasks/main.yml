@@ -30,6 +30,9 @@
   unarchive:
     src: /root/project/backend.tar.gz
     dest: /home/ubuntu
+    list_files: yes
+    copy: yes
+    
 
 # - name: "Fix critical dependencies"
 #   become: true
