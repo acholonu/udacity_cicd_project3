@@ -442,23 +442,26 @@ jobs:
             #npm i
             npm run build
             ls -lha # just want to see the list of files
-
+      
+      # Why I am doing the tar this way:
+      # https://stackoverflow.com/questions/20318852/tar-file-changed-as-we-read-it 
       - run:
           name: Compress and save build objects to tar File
           command: |
             cd backend/dist
-            tar -zcvf backend.tar.gz .
+            touch backend.tar.gz
+            tar --exclude=backend.tar.gz -zcvf backend.tar.gz .
+
+      - persist_to_workspace:
+           root: ~/
+           paths:
+             - project/backend/backend.tar.gz
 
       - run:
           name: Deploy Backend
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-
-      - persist_to_workspace:
-           root: ~/
-           paths:
-             - project/backend/backend.tar.gz
 
       - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
