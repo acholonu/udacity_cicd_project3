@@ -25,18 +25,18 @@
     path: /home/ubuntu/backend
     state: directory
 
-- name: "Fix critical dependencies"
-  become: true
-  command: npm audit fix & npm audit fix --audit-level=critical --force
-  args:
-    chdir: /home/ubuntu/backend
-
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
     src: /root/project/backend/backend.tar.gz
     dest: /home/ubuntu
 
+- name: "Fix critical dependencies"
+  become: true
+  command: npm audit fix & npm audit fix --audit-level=critical --force
+  args:
+    chdir: /home/ubuntu/backend
+    
 # - name: "move files to server"
 #   become: true
 #   copy:
