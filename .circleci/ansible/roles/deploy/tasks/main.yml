@@ -15,22 +15,35 @@
     state: latest
     update_cache: yes
 
-- name: Creates directory 
-  file:
-    path: /home/ubuntu/backend
-    state: directory
-
-- name: "Copy backend tar.gz file and unzip it"
-  become: yes
-  unarchive:
-    src: /root/project/backend/backend.tar.gz
-    dest: /home/ubuntu/backend/
-
-- name: "deploy backend app to new location"
-  become: true
+- name: Copy backend dist files to remote server
   copy:
-    src:  /root/project/backend/.env
-    dest: /home/ubuntu/backend/
+    src: /root/project/backend
+    dest: /home/ubuntu
+
+# - name: Creates directory 
+#   file:
+#     path: /home/ubuntu/backend
+#     state: directory
+
+# - name: "move files to server"
+#   become: true
+#   copy:
+#     src: /root/project/backend/dist
+#     dest: /home/ubuntu/backend
+#     remote_src: yes
+#     mode: '0777'
+
+# - name: "Copy backend tar.gz file and unzip it"
+#   become: yes
+#   unarchive:
+#     src: /root/project/backend/backend.tar.gz
+#     dest: /home/ubuntu/backend/
+
+# - name: "deploy backend app to new location"
+#   become: true
+#   copy:
+#     src:  /root/project/backend/.env
+#     dest: /home/ubuntu/backend/
 
 - name: "Fix critical dependencies"
   become: true
@@ -38,17 +51,23 @@
   args:
     chdir: /home/ubuntu/backend
 
-- name: "build application"
-  become: true
-  command: npm run build 
-  args:
-    chdir: /home/ubuntu/backend
+# - name: Building backend service
+#   shell: |
+#     cd /home/ubuntu/backend
+#     npm run build
+#     npm run prestart:prod
 
-- name: "Run migrations"
-  become: true
-  command: npm run migrations
-  args:    
-    chdir: /home/ubuntu/backend
+# - name: "build application"
+#   become: true
+#   command: npm run build 
+#   args:
+#     chdir: /home/ubuntu/backend
+
+# - name: "Run migrations"
+#   become: true
+#   command: npm run migrations
+#   args:    
+#     chdir: /home/ubuntu/backend
 
 # pm2 will automatically restart your application if it crashes
 # pm2 will keep a log of your unhandled exceptions /home/<user>/.pm2/logs/app-err.log.
@@ -59,3 +78,9 @@
     cd /home/ubuntu/backend
     pm2 start npm --name backend -- start
     pm2 ls
+
+- name: start pm2 for dist/main.js
+  become: no
+  shell: pm2 start main.js
+  args:
+    chdir: /home/ubuntu/backend/dist

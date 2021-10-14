@@ -448,14 +448,15 @@ jobs:
       - run:
           name: Compress and save build objects to tar File
           command: |
-            cd backend
-            touch backend.tar.gz
-            tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
+            #cd backend
+            tar -C backend -czvf backend.tar.gz .
+            #touch backend.tar.gz
+            #tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
 
-      - persist_to_workspace:
-           root: ~/
-           paths:
-             - project/backend/backend.tar.gz
+      # - persist_to_workspace:
+      #      root: ~/
+      #      paths:
+      #        - project/backend/backend.tar.gz
 
       - run:
           name: Deploy Backend
