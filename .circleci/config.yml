@@ -15,8 +15,9 @@ commands:
             # Your code here
             echo s3://udapeople-<<parameters.workflow_id>>/
             echo uda-frontend-stack-<<parameters.workflow_id>>
-            #aws s3 rm --recursive s3://udapeople-<<parameters.workflow_id>>/
-            aws s3 rb s3://udapeople-<<parameters.workflow_id>> --force
+            
+            aws s3 rm --recursive s3://udapeople-<<parameters.workflow_id>>/
+            #aws s3 rb s3://udapeople-<<parameters.workflow_id>> --force
             aws cloudformation delete-stack --stack-name "uda-frontend-stack-<<parameters.workflow_id>>"
             aws cloudformation delete-stack --stack-name "uda-backend-stack-<<parameters.workflow_id>>"
 
@@ -449,7 +450,9 @@ jobs:
           name: Compress and save build objects to tar File
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
-            cd backend
+            echo "@@@ TESTING @@@""
+            ls
+            #cd backend
             sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/
             # ls -lh
             
@@ -468,10 +471,10 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
 
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      # - revert-migrations:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
   smoke-test-frontend:
     docker:
