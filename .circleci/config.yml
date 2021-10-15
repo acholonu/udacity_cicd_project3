@@ -449,9 +449,9 @@ jobs:
           name: Compress and save build objects to tar File
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
-           # cd backend
-           # sudo cp backend.tar.gz /root/project/.circleci/ansible/roles/deploy/files/
-           # ls -lh
+            cd backend
+            sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/
+            # ls -lh
             
             #touch backend.tar.gz
             #tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
