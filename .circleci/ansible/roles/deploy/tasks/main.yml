@@ -25,6 +25,14 @@
     path: /home/ubuntu/backend
     state: directory
 
+- name: "move files to server"
+  become: true
+  copy:
+    src: /root/project/backend/dist
+    dest: /home/ubuntu/backend
+    remote_src: yes
+    mode: '0777'
+
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
