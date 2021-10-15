@@ -590,13 +590,14 @@ jobs:
 
       - run:
           name: Update cloudfront distribution
+          no_output_timeout: 30m
           command: |
             # your code here
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront \ 
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
-              --tags project=udapeople &
+              --tags project="udapeople-${CIRCLE_WORKFLOW_ID:0:7}-app"
 
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
