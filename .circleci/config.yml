@@ -468,7 +468,7 @@ jobs:
             cd ..
             echo "@@@ inside of main folder @@@"
             ls
-            sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/
+            sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/backend.tar.gz
 
       # - persist_to_workspace:
       #      root: ~/
