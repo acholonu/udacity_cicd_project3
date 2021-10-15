@@ -463,10 +463,6 @@ jobs:
       - run:
           name: Save compressed files into Ansible folder
           command: |
-            cd backend
-            echo "@@@ inside of backend folder @@@"
-            ls
-            cd ..
             echo "@@@ inside of main folder @@@"
             ls
             sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/backend.tar.gz
