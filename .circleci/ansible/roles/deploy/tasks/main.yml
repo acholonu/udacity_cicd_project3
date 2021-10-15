@@ -15,9 +15,10 @@
     state: latest
     update_cache: yes
 
+# Just a test.  Test.md is in the ansible file folder
 - name: Copy test file to remote server
   copy:
-    src: /root/project/test.md
+    src: test.md
     dest: /home/ubuntu
 
 - name: Creates directory 
@@ -25,21 +26,22 @@
     path: /home/ubuntu/backend
     state: directory
 
-- name: "move files to server"
-  become: true
-  copy:
-    src: /root/project/backend/dist
-    dest: /home/ubuntu/backend
-    remote_src: yes
-    mode: '0777'
+# - name: "move files to server"
+#   become: true
+#   copy:
+#     src: /root/project/backend/dist
+#     dest: /home/ubuntu/backend
+#     remote_src: yes
+#     mode: '0777'
 
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
-    src: /root/project/backend.tar.gz
+    src: /root/project/backend/backend.tar.gz
     dest: /home/ubuntu
     list_files: yes
     copy: yes
+    remote_src: yes #Not sure about this
     
 
 # - name: "Fix critical dependencies"
