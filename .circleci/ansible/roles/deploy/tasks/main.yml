@@ -15,7 +15,8 @@
     state: latest
     update_cache: yes
 
-# Just a test.  Test.md is in the ansible file folder
+# Just a test to understand the src parameter.  
+# Test.md is in the ansible file folder
 - name: Copy test file to remote server
   copy:
     src: test.md
@@ -39,9 +40,7 @@
   unarchive:
     src: /root/project/backend/backend.tar.gz
     dest: /home/ubuntu
-    list_files: yes
     copy: yes
-    remote_src: yes #Not sure about this
     
 
 # - name: "Fix critical dependencies"
