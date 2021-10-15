@@ -511,7 +511,7 @@ jobs:
             if curl $URL | grep "Welcome"
             then
               echo "SUCCESS: Connected to frontend using the S3 URL: $URL"
-              return 0
+              return 1
             else
               echo "FAILURE: Failed to connect to frontend URL: $URL"
               return 1
