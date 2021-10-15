@@ -593,20 +593,10 @@ jobs:
           no_output_timeout: 30m
           command: |
             # your code here
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\'WorkflowID\'].Value" \
-              --no-paginate --output text)
-
-            export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
-              --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-
-            echo Old Workflow ID: ${OLD_WORKFLOW_ID} 
-
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront \ 
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"\
-              --tags project="udapeople-${CIRCLE_WORKFLOW_ID:0:7}-app"
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
 
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
@@ -630,9 +620,9 @@ jobs:
           name: Get old stack workflow id
           command: |
             # your code here
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
+            export OldWorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
+              --no-paginate --output text) 
 
             echo "OLD_WORKFLOW_ID = ${OLD_WORKFLOW_ID}"
 
@@ -643,9 +633,9 @@ jobs:
           command: |
             if [[ "${STACKS[@]}" =~ "${OLD_WORKFLOW_ID}"]]
             then
-              aws s3 rm "s3://udapeople-${OLD_WORKFLOW_ID}" --recursive
-              aws cloudformation delete-stack --stack-name "udapeople-backend-${OLD_WORKFLOW_ID}"
-              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OLD_WORKFLOW_ID}"
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             fi
             
 workflows:
