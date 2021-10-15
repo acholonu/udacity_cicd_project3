@@ -38,10 +38,8 @@
 - name: "Copy backend tar.gz file and unzip it"
   become: yes
   unarchive:
-    src: backend.tar.gz #next step is to try this.  I removed the extra backend.
+    src: backend.tar.gz
     dest: /home/ubuntu
-    # copy: yes
-    remote_src: yes
     
 # - name: "Fix critical dependencies"
 #   become: true
