@@ -447,7 +447,7 @@ jobs:
       # Why I am doing the tar this way:
       # https://stackoverflow.com/questions/20318852/tar-file-changed-as-we-read-it 
       - run:
-          name: Compress and build objects to tar File
+          name: Compress build objects to tar File
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
             echo "@@@ TESTING current directory@@@""
