@@ -450,12 +450,13 @@ jobs:
           name: Compress and build objects to tar File
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
-            echo "@@@ TESTING @@@""
+            echo "@@@ TESTING current directory@@@""
             ls
-            #cd backend
-            sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/
-            # ls -lh
-            
+
+            cd backend
+            echo "@@@ TESTING Backend directory@@@""
+            ls
+
             #touch backend.tar.gz
             #tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
 
