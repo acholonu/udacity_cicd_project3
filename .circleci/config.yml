@@ -447,7 +447,7 @@ jobs:
       # Why I am doing the tar this way:
       # https://stackoverflow.com/questions/20318852/tar-file-changed-as-we-read-it 
       - run:
-          name: Compress and save build objects to tar File
+          name: Compress and build objects to tar File
           command: |
             tar -C backend -czvf backend.tar.gz . #Change directory to backend, then tar
             echo "@@@ TESTING @@@""
@@ -458,6 +458,17 @@ jobs:
             
             #touch backend.tar.gz
             #tar --exclude=backend.tar.gz -zcvf backend.tar.gz dist
+
+      - run:
+          name: Save compressed files into Ansible folder
+          command: |
+            cd backend
+            echo "@@@ inside of backend folder @@@"
+            ls
+            cd ..
+            echo "@@@ inside of main folder @@@"
+            ls
+            sudo cp backend.tar.gz .circleci/ansible/roles/deploy/files/
 
       # - persist_to_workspace:
       #      root: ~/
