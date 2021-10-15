@@ -40,7 +40,8 @@
   unarchive:
     src: /root/project/backend/backend.tar.gz
     dest: /home/ubuntu
-    copy: yes
+    # copy: yes
+    remote_src: yes
     
 
 # - name: "Fix critical dependencies"
