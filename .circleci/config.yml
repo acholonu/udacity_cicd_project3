@@ -597,11 +597,11 @@ jobs:
             # your code here
             cd .circleci/files
             ls
-            aws cloudformation deploy 
+            aws cloudformation deploy \
               --template-file file://cloudfront.yml \ 
-              --stack-name udapeople-cloudfront 
-              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
-              --region ${AWS_DEFAULT_REGION}
+              --stack-name udapeople-cloudfront \
+              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7} \
+              --region ${AWS_DEFAULT_REGION} \
               --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
 
       # Here's where you will add some code to rollback on failure  
