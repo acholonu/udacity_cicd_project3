@@ -603,9 +603,9 @@ jobs:
             #   --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 
             aws cloudformation deploy \
-              --template-file ./.circleci/files/cloudfront.yml \
+              --template-file .circleci/files/cloudfront.yml \
               --tags project=udacity-project3-promotion \
-              --stack-name uda-cloudfront-stack \ 
+              --stack-name "uda-cloudfront-stack-${CIRCLE_WORKFLOW_ID:0:7}" \ 
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --region "${AWS_DEFAULT_REGION}" \
               --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
