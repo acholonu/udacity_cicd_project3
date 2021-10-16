@@ -1,6 +1,7 @@
    
 Description: >
   Cloudfront distribution for UdaPeople.
+  
 Parameters:
   WorkflowID:
     Description: Unique identifier.
