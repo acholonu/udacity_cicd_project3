@@ -595,9 +595,7 @@ jobs:
           no_output_timeout: 30m
           command: |
             # your code here
-            cd .circleci/files
-            ls
-
+        
             # aws cloudformation deploy \
             #   --template-file .circleci/files/frontend.yml \
             #   --tags project=udacity-project3-frontend \
@@ -605,10 +603,12 @@ jobs:
             #   --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
 
             aws cloudformation deploy \
-              --template-file cloudfront.yml \
+              --template-file .circleci/files/cloudfront.yml \
               --tags project=udacity-project3-promotion \
-              --stack-name "udapeople-cloudfront" \ 
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+              --stack-name uda-cloudfront-stack \ 
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --region "${AWS_DEFAULT_REGION}" \
+              --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM"
               
 
       # Here's where you will add some code to rollback on failure  
