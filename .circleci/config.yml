@@ -589,6 +589,7 @@ jobs:
             yum install -y gzip
 
       - run:
+          # https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudformation/deploy.html
           name: Update cloudfront distribution
           no_output_timeout: 30m
           command: |
@@ -596,7 +597,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront \ 
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
