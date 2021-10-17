@@ -1,1 +1,3 @@
-- GitHub Repository: https://github.com/acholonu/udacity_cicd_project3
+- GitHub Repository [URL01]: https://github.com/acholonu/udacity_cicd_project3
+- FrontEND S3 bucket [URL02]: https://udapeople-9521660.s3.amazonaws.com/index.html#/employees
+- Backend Health URL [URL03]: http://ec2-44-197-175-161.compute-1.amazonaws.com:3030/api/status
