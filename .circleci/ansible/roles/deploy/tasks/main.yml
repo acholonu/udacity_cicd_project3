@@ -58,6 +58,7 @@
 
     # list the last 20 logs that pm2 has registered
     pm2 logs lines 20 #lists the last 20 logs
+    
   async: 45
   poll: 0
   environment:
