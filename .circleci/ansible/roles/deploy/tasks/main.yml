@@ -50,16 +50,16 @@
 
     pm2 start npm --watch --ignore-watch="node_modules" --time --name uda-backend  -- start
 
-    #cd dist
-    #pm2 start main.js --watch --time --name main_app
+    cd dist
+    pm2 start main.js --watch --time --name main_app
     
     # List process that pm2 is running and monitoring
     pm2 ls
 
     # list the last 20 logs that pm2 has registered
     pm2 logs lines 20 #lists the last 20 logs
-  #async: 45
-  #poll: 0
+  async: 45
+  poll: 0
   environment:
     Environment:
       ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
