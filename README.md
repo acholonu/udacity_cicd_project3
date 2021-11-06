@@ -344,3 +344,7 @@ Before you submit your project, please check your work against the project rubri
 ### License
 
 [License](LICENSE.md)
+
+## Status Badge
+
+[![acholonu](https://circleci.com/gh/acholonu/udacity_cicd_project3.svg?style=svg)](https://app.circleci.com/pipelines/github/acholonu/udacity_cicd_project3)
