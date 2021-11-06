@@ -48,10 +48,10 @@
     # need the dash -- before start (at the end of the command) so that pm2 will stop parsing the flags as its own.  Instead the start command
     # will be attached to the npm command (i.e. npm start)
 
-    #pm2 start npm --watch --ignore-watch="node_modules" --time --name uda-backend  -- start
+    pm2 start npm --watch --ignore-watch="node_modules" --time --name uda-backend  -- start
 
-    cd dist
-    pm2 start main.js --watch --time --name main_app
+    #cd dist
+    #pm2 start main.js --watch --time --name main_app
     
     # List process that pm2 is running and monitoring
     pm2 ls
