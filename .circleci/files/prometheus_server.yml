@@ -34,6 +34,18 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9093 # port for postgres database connection
+          ToPort: 9093
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9100 # port for postgres database connection
+          ToPort: 9100
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22 # port for postgres database connection
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
 
   PrometheusEC2Instance:
     Type: AWS::EC2::Instance

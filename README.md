@@ -9,6 +9,10 @@ In this project, you will prove your mastery of the following learning objective
 
 ![Diagram of CI/CD Pipeline we will be building.](./img/udapeople.png)
 
+## Status Badge
+
+[![acholonu](https://circleci.com/gh/acholonu/udacity_cicd_project3.svg?style=svg)](https://app.circleci.com/pipelines/github/acholonu/udacity_cicd_project3)
+
 ## Conceptual Overview of the Project
 
 To help my understanding, I will present my conceptual understanding of the project.  What we are trying to do and how.
@@ -133,6 +137,7 @@ Log into the machine and type `telnet localhost 3030`, for instance, if you are 
 ### Random help links
 
 - [Easy PM2 resource](https://pm2.keymetrics.io/docs/usage/quick-start/)
+- [Create Your Own Slack App](https://api.slack.com/messaging/webhooks)
 - [Creating a SlackApp to use CircleCI Slack Orb](https://github.com/CircleCI-Public/slack-orb/wiki/Setup)
 - [AWS CLI S3 Command Reference](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/sync.html)
 - [Common Network Ports](https://www.utilizewindows.com/list-of-common-network-port-numbers/)
@@ -344,7 +349,3 @@ Before you submit your project, please check your work against the project rubri
 ### License
 
 [License](LICENSE.md)
-
-## Status Badge
-
-[![acholonu](https://circleci.com/gh/acholonu/udacity_cicd_project3.svg?style=svg)](https://app.circleci.com/pipelines/github/acholonu/udacity_cicd_project3)

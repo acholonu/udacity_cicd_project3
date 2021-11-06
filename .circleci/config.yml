@@ -378,11 +378,8 @@ jobs:
           command: |
             cd .circleci/ansible/roles/configure-prometheus-alertmanager/files
             # Not sure if the file should be .txt or .yml
-            export slack_api_url=$SLACK_WEBHOOK
+            export slack_api_url=$SLACK_WEBHOOK_NEW
             python slack_config.py
-            
-            #echo $SLACK_WEBHOOK > slack_configutation.yml
-            #cat slack_configuration.yml
 
       - run:
           name: Configure Prometheus Server
