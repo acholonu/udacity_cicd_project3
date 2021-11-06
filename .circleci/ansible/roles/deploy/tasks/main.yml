@@ -36,6 +36,8 @@
     npm i
     npm run build #Not sure if needed
 
+# Running things asynchronously
+# Resource: https://docs.ansible.com/ansible/latest/user_guide/playbooks_async.html
 - name: Start backend
   become: true
   shell: |
@@ -56,7 +58,8 @@
 
     # list the last 20 logs that pm2 has registered
     pm2 logs lines 20 #lists the last 20 logs
-
+  #async: 45
+  #poll: 0
   environment:
     Environment:
       ENVIRONMENT: "{{ lookup('env', 'ENVIRONMENT') }}"
