@@ -1,8 +1,8 @@
 # Used to set up the prometheus server
 # Resource: https://prometheus.io/docs/prometheus/latest/getting_started/
 global:
-  scrape_interval: 15s # By default, scrape targets every 15 seconds.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  scrape_interval: 10s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 10s # Evaluate rules every 15 seconds. The default is every 1 minute.
 
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
@@ -14,7 +14,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+          - localhost:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -32,6 +32,7 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'node_exporter'
+    scrape_interval: 5s
     static_configs:
       - targets: ['ec2-54-160-97-116.compute-1.amazonaws.com:9100']
 
