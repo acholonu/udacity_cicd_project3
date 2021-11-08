@@ -25,7 +25,7 @@
   unarchive:
     src: backend.tar.gz
     dest: /home/ubuntu/backend
-
+    
 # pm2 will automatically restart your application if it crashes
 # pm2 will keep a log of your unhandled exceptions /home/<user>/.pm2/logs/app-err.log.
 # learn more: https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps
@@ -34,6 +34,7 @@
   shell: |
     cd /home/ubuntu/backend
     npm i
+    npm audit fix --audit-level=critical --force
     npm run build #Not sure if needed
 
 # Running things asynchronously

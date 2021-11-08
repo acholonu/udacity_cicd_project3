@@ -11,11 +11,6 @@
     state: latest
     update_cache: yes
 
-- name: "Fix Critical Security Issues"
-  become: true
-  shell: |
-    npm audit fix --audit-level=critical --force
-
 - name: "install pm2 server"
   become: true
   npm:
