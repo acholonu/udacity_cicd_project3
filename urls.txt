@@ -1,4 +1,4 @@
 - GitHub Repository [URL01]: https://github.com/acholonu/udacity_cicd_project3
-- FrontEND S3 bucket [URL02]: https://udapeople-8022e3c.s3.amazonaws.com/index.html#/employees
+- FrontEND S3 bucket [URL02]: http://udapeople-8648c8b.s3.amazonaws.com/index.html
 - Backend Health URL [URL03]: http://ec2-54-160-97-116.compute-1.amazonaws.com:3030/api/status
-- Promethesus Server [URL04]: http://ec2-54-167-22-106.compute-1.amazonaws.com:9090
+- Prometheus Server [URL04]: http://ec2-54-167-22-106.compute-1.amazonaws.com:9090

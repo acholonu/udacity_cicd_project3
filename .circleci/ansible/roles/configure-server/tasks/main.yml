@@ -11,15 +11,12 @@
     state: latest
     update_cache: yes
 
-# - name: "install pm2"
-#   become: true
-#   npm:
-#     name: pm2-server-monit
-#     global: yes
-#     production: yes
-#     state: present
+- name: "Fix Critical Security Issues"
+  become: true
+  shell: |
+    npm audit fix --audit-level=critical --force
 
-- name: "install pm2 server monit"
+- name: "install pm2 server"
   become: true
   npm:
     name: pm2
