@@ -34,6 +34,8 @@
   shell: |
     cd /home/ubuntu/backend
     npm i
+    npm install -g npm-install-peers
+    npm-install-peers
     npm audit fix --audit-level=critical --force
     npm run build #Not sure if needed
 
