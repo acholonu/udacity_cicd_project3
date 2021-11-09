@@ -471,7 +471,7 @@ jobs:
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
-            export API_URL="https://${BACKEND_DNS}:3030"
+            export API_URL="http://${BACKEND_DNS}:3030"
 
             echo "${API_URL}"
             echo ENVIRONMENT=production > "frontend/.env"
