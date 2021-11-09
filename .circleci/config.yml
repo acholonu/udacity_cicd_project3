@@ -470,7 +470,7 @@ jobs:
           name: Get backend url
           command: |
             # your code here
-            BACKEND_DNS=$(awk (curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns))
+            BACKEND_DNS=$((curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns) | sed -e 's/^[[:space:]]*//')
             export API_URL="http://${BACKEND_DNS}:3030" 
 
             echo "${BACKEND_DNS}"
