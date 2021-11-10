@@ -471,18 +471,14 @@ jobs:
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
-            export API_URL='http://${BACKEND_DNS}:3030' 
+            export API_URL="http://${BACKEND_DNS}:3030"
 
             echo ${BACKEND_DNS}
             echo ${API_URL}
-            echo 'API_URL2=http://${BACKEND_DNS}:3030'
-            echo 'API_URL3=http://$BACKEND_DNS:3030'
-            echo API_URL4=http://${BACKEND_DNS}:3030
-            echo "API_URL5=http://${BACKEND_DNS}:3030"
 
             echo ENVIRONMENT=production > "frontend/.env"
             echo NODE_ENV=production >> "frontend/.env"
-            echo API_URL=http://${BACKEND_DNS}:3030 >> "frontend/.env"
+            echo API_URL=${API_URL} >> "frontend/.env"
             cat frontend/.env
 
       - run:
