@@ -523,11 +523,14 @@ jobs:
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
-          name: Fix security issues
+          name: Install dependencies
           no_output_timeout: 15m
           command: |
             # your code here
             cd frontend
+            npm install oauth-sign
+            npm install
+            npm update
             npm audit fix
 
       - run:
