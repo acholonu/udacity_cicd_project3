@@ -474,10 +474,12 @@ jobs:
             export API_URL="http://${BACKEND_DNS}:3030" 
 
             echo ${BACKEND_DNS}
-            echo -n ${API_URL}
+            echo ${API_URL}
             echo ENVIRONMENT=production > "frontend/.env"
             echo NODE_ENV=production >> "frontend/.env"
-            echo -n "API_URL=${API_URL}" >> "frontend/.env"
+            #echo "API_URL=${API_URL}" >> "frontend/.env"
+            # \b is supposed to remove all the space between the text
+            echo -e "API_URL=http://\b${BACKEND_DNS}:3030" >> "frontend/.env"
             cat frontend/.env
 
       - run:
