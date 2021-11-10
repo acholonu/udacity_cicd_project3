@@ -3,7 +3,7 @@ version: 2.1
 # Think of orbs as libraries or packages for CircleCI
 orbs:
   slack: circleci/slack@4.4.4
-  #aws-cli: circleci/aws-cli@2.0.3
+  aws-cli: circleci/aws-cli@2.0.3
   #node: circleci/node@4.7.0
 
 
@@ -444,30 +444,93 @@ jobs:
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
          
+  # # Deploys the static web site (front-end of the application)
+  # deploy-frontend:
+  #   docker:
+  #     # Docker image here that supports AWS CLI
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     # Checkout code from git
+  #     - checkout
+  #     - run:
+  #         # Explains the -y for the yum install command: 
+  #         # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
+  #         name: Install dependencies
+  #         no_output_timeout: 15m
+  #         command: |
+  #           # your code here
+  #           yum install gzip tar python3-pip curl -y
+  #           curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+  #           yum install nodejs npm -y
+  #           cd frontend
+  #           npm install
+  #           npm audit fix
+
+  #     - run:
+  #         name: Get backend url
+  #         command: |
+  #           # your code here
+  #           BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
+  #           export API_URL="http://${BACKEND_DNS}:3030"
+
+  #           echo ${BACKEND_DNS}
+  #           echo ${API_URL}
+
+  #           echo ENVIRONMENT=production > "frontend/.env"
+  #           echo NODE_ENV=production >> "frontend/.env"
+  #           echo API_URL=${API_URL} >> "frontend/.env"
+  #           cat frontend/.env
+
+  #     - run:
+  #         name: Build frontend objects
+  #         command: |
+  #           # your code here
+  #           cd frontend
+  #           cat .env
+  #           npm run build:prod
+  #           ls -lha
+
+  #     - run:
+  #         # difference btw aws cp and aws sync: https://stackoverflow.com/questions/64728076/aws-s3-cp-vs-aws-s3-sync-behavior-and-cost
+  #         name: Move front end files to S3 candidate bucket
+  #         command: |
+  #           cd frontend
+  #           cp favicon.ico dist/favicon.ico # resolves error that I am missing this icon
+  #           cp favicon.ico dist/images/favicon.ico # resolves error that I am missing this icon
+
+  #           cd dist
+  #           ls -lha
+  #           # This should copy to S3 bucket
+  #           aws s3 sync . s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --acl public-read --delete
+            
+  #     # Here's where you will add some code to rollback on failure
+  #     - notify_slack_error
+  #     - destroy-environment:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+  #     - revert-migrations:
+  #         workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+
   # Deploys the static web site (front-end of the application)
   deploy-frontend:
     docker:
       # Docker image here that supports AWS CLI
-      - image: amazon/aws-cli
+      - image: cimg/python-node
     steps:
       # Checkout code from git
       - checkout
+      - aws-cli/install
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
-          name: Install dependencies
+          name: Fix security issues
           no_output_timeout: 15m
           command: |
             # your code here
-            yum install gzip tar python3-pip curl -y
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install nodejs npm -y
             cd frontend
-            npm install
             npm audit fix
 
       - run:
-          name: Get backend url
+          name: Get and save backend url
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
