@@ -469,7 +469,7 @@ jobs:
             npm install
             npm update
             npm audit fix
-            pip install os
+            pip install -U pip
 
       - run:
           name: Get and save backend url
