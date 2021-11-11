@@ -475,13 +475,17 @@ jobs:
           name: Get and save backend url
           command: |
             # your code here
+
+            # from memstash feature store
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
             
+            # from aws DNS
             backend_dns=$(aws ec2 describe-instances \
              --filters "Name=tag:project,Values=udacity-project3-backend" \
              --query 'Reservations[*].Instances[*].PublicDnsName' \
              --output text)
 
+            # from aws IP
             backend_ip=$(aws ec2 describe-instances \
              --filters "Name=tag:project,Values=udacity-project3-backend" \
              --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -498,19 +502,8 @@ jobs:
 
             echo ENVIRONMENT=production > "frontend/.env"
             echo NODE_ENV=production >> "frontend/.env"
-            echo ${API_URL} >> "frontend/.env"
+            echo ${API_URL} >> "frontend/.env" #IP works
             cat frontend/.env
-
-      # - run:
-      #     name: Use Python to fix .env file
-      #     command: |
-      #       # Add your code here
-      #       python val = os.environ['API_URL']
-      #       python print(f"output val: {val}")
-      #       python val2 = val.replace(" ","")
-      #       python os.environ['API_URL'] = val2
-      #       echo API_URL >> "frontend/.env"
-      #       cat frontend/.env
 
       - run:
           name: Build frontend objects
