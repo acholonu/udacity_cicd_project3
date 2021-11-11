@@ -457,6 +457,8 @@ jobs:
       # Checkout code from git
       - checkout
       - aws-cli/install # installs aws cli 2.0
+      - attach_workspace:
+          at: ~/
       - run:
           # Explains the -y for the yum install command: 
           # https://stackoverflow.com/questions/44715458/build-docker-image-fail-exiting-on-user-command
