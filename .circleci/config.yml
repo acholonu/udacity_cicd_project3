@@ -469,6 +469,7 @@ jobs:
             npm install
             npm update
             npm audit fix
+            pip install os
 
       - run:
           name: Get and save backend url
@@ -489,7 +490,6 @@ jobs:
           name: Use Python to fix .env file
           command: |
             # Add your code here
-            python import os
             python val = os.environ['API_URL']
             python print(f"output val: {val}")
             python val2 = val.replace(" ","")
