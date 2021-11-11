@@ -476,26 +476,41 @@ jobs:
           command: |
             # your code here
             BACKEND_DNS=$(curl -H "token: 27705889-3d05-4084-b0fa-a1fbe209f3f1" --request GET https://api.memstash.io/values/backend_dns)
-            export API_URL="API_URL=http://${BACKEND_DNS}:3030"
+            
+            backend_dns=$(aws ec2 describe-instances \
+             --filters "Name=tag:project,Values=udacity-project3-backend" \
+             --query 'Reservations[*].Instances[*].PublicDnsName' \
+             --output text)
+
+            backend_ip=$(aws ec2 describe-instances \
+             --filters "Name=tag:project,Values=udacity-project3-backend" \
+             --query 'Reservations[*].Instances[*].PublicIpAddress' \
+             --output text)
+
+            export API_URL="API_URL=http://${backend_ip}:3030"
+            export API_URL_OLD="API_URL=http://${BACKEND_DNS}:3030"
+            echo API_URL2="API_URL=http://${backend_dns}:3030"
 
             echo ${BACKEND_DNS}
+            echo ${backend_dns}
+            echo ${backend_ip}
             echo ${API_URL}
 
             echo ENVIRONMENT=production > "frontend/.env"
             echo NODE_ENV=production >> "frontend/.env"
-            #echo API_URL >> "frontend/.env"
+            echo ${API_URL} >> "frontend/.env"
             cat frontend/.env
 
-      - run:
-          name: Use Python to fix .env file
-          command: |
-            # Add your code here
-            python val = os.environ['API_URL']
-            python print(f"output val: {val}")
-            python val2 = val.replace(" ","")
-            python os.environ['API_URL'] = val2
-            echo API_URL >> "frontend/.env"
-            cat frontend/.env
+      # - run:
+      #     name: Use Python to fix .env file
+      #     command: |
+      #       # Add your code here
+      #       python val = os.environ['API_URL']
+      #       python print(f"output val: {val}")
+      #       python val2 = val.replace(" ","")
+      #       python os.environ['API_URL'] = val2
+      #       echo API_URL >> "frontend/.env"
+      #       cat frontend/.env
 
       - run:
           name: Build frontend objects
